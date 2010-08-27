@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Runtime.Remoting;
 using Ch.Elca.Iiop.Idl;
 using omg.org.CORBA;
-using System.Runtime.Remoting;
 
 namespace Scs.Core.Util
 {
@@ -30,6 +27,6 @@ namespace Scs.Core.Util
       RemotingServices.Marshal(facetObj);
     }
 
-    
+
   }
 }

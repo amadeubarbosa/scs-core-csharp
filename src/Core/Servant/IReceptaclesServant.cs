@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Ch.Elca.Iiop.Idl;
-using omg.org.CORBA;
 using scs.core;
 using Scs.Core.Util;
 
@@ -79,11 +77,11 @@ namespace Scs.Core.Servant
     private Receptacle FindReceptacle(int id) {
       IDictionary<string, Receptacle> receptacles = context.GetReceptacles();
       foreach (Receptacle receptacle in receptacles.Values) {
-        try {          
+        try {
           receptacle.GetConnection(id);
           return receptacle;
         }
-        catch(KeyNotFoundException) {}        
+        catch (KeyNotFoundException) { }
       }
       return null;
     }

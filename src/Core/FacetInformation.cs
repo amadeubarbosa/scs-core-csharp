@@ -8,8 +8,6 @@ namespace Scs.Core
   public class FacetInformation
   {
 
-
-
     #region Fields
 
     /// <summary>

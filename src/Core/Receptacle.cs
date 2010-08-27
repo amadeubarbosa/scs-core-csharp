@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using scs.core;
 using System.Threading;
+using scs.core;
 
 namespace Scs.Core
 {
@@ -76,9 +74,9 @@ namespace Scs.Core
     public int AddConnections(MarshalByRefObject obj) {
       if (obj == null)
         return -1;
-      
 
-      int id = Interlocked.Increment(ref Receptacle.connectionId);      
+
+      int id = Interlocked.Increment(ref Receptacle.connectionId);
       this.connections.Add(id, obj);
       return id;
     }
@@ -122,7 +120,7 @@ namespace Scs.Core
     /// <returns>A quantidade das conexões.</returns>
     public int GetConnectionsSize() {
       return this.connections.Count;
-    }   
+    }
 
     #endregion
 

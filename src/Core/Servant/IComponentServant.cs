@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using scs.core;
 using System.Collections;
+using System.Collections.Generic;
+using scs.core;
 
 namespace Scs.Core.Servant
 {

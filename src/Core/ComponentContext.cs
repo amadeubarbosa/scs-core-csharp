@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Scs.Core;
 using scs.core;
 
 namespace Scs.Core
@@ -34,7 +33,7 @@ namespace Scs.Core
     /// </summary>
     /// <returns>A coleção de <i>FaceDescriptions</i>.</returns>
     IDictionary<String, Facet> GetFacets();
-    
+
     /// <summary>
     /// Fornece a coleção de receptáculos. Onde a chave é o nome do receptáculo
     /// e o valor é o próprio receptáculo.

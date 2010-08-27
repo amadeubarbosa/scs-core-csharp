@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Scs.Core;
-using Scs.Core.Util;
 using scs.core;
+using Scs.Core.Util;
 
 namespace Scs.Core
 {
@@ -54,10 +53,10 @@ namespace Scs.Core
         return null;
 
       string icomponentRepId = IiopNetUtil.GetRepositoryId(typeof(IComponent));
-      foreach(Facet facet in facets){
+      foreach (Facet facet in facets) {
         if (facet.RepositoryId == icomponentRepId)
           return facet.ObjectRef as IComponent;
-       }
+      }
 
       return null;
     }
