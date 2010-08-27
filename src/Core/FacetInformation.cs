@@ -5,8 +5,13 @@ namespace Scs.Core
   /// <summary>
   /// Informação para criação da faceta.
   /// </summary>
-  public struct FacetInformation
+  public class FacetInformation
   {
+
+
+
+    #region Fields
+
     /// <summary>
     /// Nome da faceta.
     /// </summary>
@@ -21,5 +26,19 @@ namespace Scs.Core
     /// O tipo da classe que implementa a faceta.
     /// </summary>
     public Type type;
+
+    #endregion
+
+
+    #region Contructors
+
+    public FacetInformation(string name, string interfaceName, Type type) {
+      this.name = name;
+      this.interfaceName = interfaceName;
+      this.type = type;
+    }
+
+    #endregion
+
   }
 }

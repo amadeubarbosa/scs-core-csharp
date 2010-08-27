@@ -6,7 +6,7 @@ using scs.core;
 
 namespace Scs.Core.Servant
 {
-  public class IMetaInterfaceServant : IMetaInterface
+  public class IMetaInterfaceServant : MarshalByRefObject, IMetaInterface
   {
 
     #region Field

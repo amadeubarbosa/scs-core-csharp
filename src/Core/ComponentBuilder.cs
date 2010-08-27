@@ -6,6 +6,7 @@ using Ch.Elca.Iiop.Idl;
 using Scs.Core.Util;
 using Scs.Core.Exception;
 using scs.core;
+using Scs.Core.Servant;
 
 namespace Scs.Core
 {
@@ -27,21 +28,21 @@ namespace Scs.Core
 
       ComponentContext context = new DefaultComponentContext(componentId);
 
+      AddBasicFacets(facets);
+
       foreach (FacetInformation facet in facets) {
-        MarshalByRefObject facetObj = CreateFacet(facet);
+        MarshalByRefObject facetObj = CreateFacet(facet, context);
         if (facetObj == null) {
           string errorMsg = "Faceta não pode ser instanciada como um" +
             "objeto remoto";
           throw new SCSException(errorMsg);
         }
         IiopNetUtil.ActivateFacet(facetObj);
-        AddFacetToComponent(facet, facetObj,context);
+        AddFacetToComponent(facet, facetObj, context);
       }
 
-
-      return null;
+      return context;
     }
-
 
     #region Private Methods
 
@@ -50,7 +51,8 @@ namespace Scs.Core
     /// </summary>
     /// <param name="facet">A instância da faceta.</param>
     /// <returns>Falha na criação do objeto.</returns>
-    private MarshalByRefObject CreateFacet(FacetInformation facet) {
+    private MarshalByRefObject CreateFacet(FacetInformation facet,
+        ComponentContext context) {
       string facetName = facet.name;
       string facetInterface = facet.interfaceName;
       Type facetType = facet.type;
@@ -64,7 +66,7 @@ namespace Scs.Core
       }
 
       return constructor.Invoke(
-        new object[] { typeof(ComponentContext) }) as MarshalByRefObject;
+          new object[] { context }) as MarshalByRefObject;
     }
 
     /// <summary>
@@ -73,7 +75,7 @@ namespace Scs.Core
     /// <param name="facet">As informações da facet.</param>
     /// <param name="facetObj">A faceta instanciada (objeto CORBA).</param>
     /// <param name="context">O contexto do componente.</param>
-    private void AddFacetToComponent(FacetInformation facet, 
+    private void AddFacetToComponent(FacetInformation facet,
         MarshalByRefObject facetObj, ComponentContext context) {
       string facetName = facet.name;
       string facetInterface = facet.interfaceName;
@@ -83,6 +85,45 @@ namespace Scs.Core
       contexFacets.Add(facetName, newFacet);
     }
 
+    /// <summary>
+    /// Adiciona as facetas básicas à lista de Facetas criadas pelo usuário.
+    /// </summary>
+    /// <param name="facets">A lista de facetas criada pelo usuário.</param>
+    private void AddBasicFacets(List<FacetInformation> facets) {
+
+      Type componentType = typeof(IComponent);
+      string componentName = componentType.Name;
+      string componentRepId = IiopNetUtil.GetRepositoryId(componentType);
+      FacetInformation componnetFacetsFind = facets.Find(
+        delegate(FacetInformation facet) { return facet.name == componentName; });
+      if (componnetFacetsFind == null) {
+        FacetInformation componentFacet = new FacetInformation(componentName,
+            componentRepId, typeof(IComponentServant));
+        facets.Add(componentFacet);
+      }
+
+      Type receptacleType = typeof(IReceptacles);
+      string receptacleName = receptacleType.Name;
+      string receptacleRepId = IiopNetUtil.GetRepositoryId(receptacleType);
+      FacetInformation receptacleFacetsFind = facets.Find(
+        delegate(FacetInformation facet) { return facet.name == receptacleName; });
+      if (receptacleFacetsFind == null) {
+        FacetInformation receptacleFacet = new FacetInformation(receptacleName,
+            receptacleRepId, typeof(IReceptaclesServant));
+        facets.Add(receptacleFacet);
+      }
+
+      Type metaInterfaceType = typeof(IMetaInterface);
+      string metaInterfaceName = metaInterfaceType.Name;
+      string metaInterfaceRepId = IiopNetUtil.GetRepositoryId(metaInterfaceType);
+      FacetInformation metaInterfaceFind = facets.Find(
+        delegate(FacetInformation facet) { return facet.name == metaInterfaceName; });
+      if (metaInterfaceFind == null) {
+        FacetInformation metaInterfaceFacet = new FacetInformation(
+            metaInterfaceName, metaInterfaceRepId, typeof(IMetaInterfaceServant));
+        facets.Add(metaInterfaceFacet);
+      }
+    }
 
     #endregion
 

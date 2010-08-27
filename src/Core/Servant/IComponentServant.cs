@@ -7,7 +7,7 @@ using System.Collections;
 
 namespace Scs.Core.Servant
 {
-  public class IComponentServant : IComponent
+  public class IComponentServant : MarshalByRefObject, IComponent
   {
     #region Field
 

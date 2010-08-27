@@ -8,7 +8,7 @@ using Scs.Core.Util;
 
 namespace Scs.Core.Servant
 {
-  public class IReceptaclesServant : IReceptacles
+  public class IReceptaclesServant : MarshalByRefObject, IReceptacles
   {
     #region Field
 
