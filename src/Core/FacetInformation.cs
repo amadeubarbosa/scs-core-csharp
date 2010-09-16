@@ -13,30 +13,50 @@ namespace Scs.Core
     /// <summary>
     /// Nome da faceta.
     /// </summary>
-    public string name;
+    public string Name {
+      get {
+        return name;
+      }
+    }
+    private string name;
 
     /// <summary>
-    /// Nome da interface;
+    /// Tipo da interface.
     /// </summary>
-    public string interfaceName;
+    public string RepositoryId {
+      get {
+        return repositoryId;
+      }
+    }
+    private string repositoryId;
 
     /// <summary>
     /// O tipo da classe que implementa a faceta.
     /// </summary>
-    public Type type;
+    public Type Type {
+      get {
+        return type;
+      }
+    }
+    private Type type;
 
     #endregion
 
 
     #region Contructors
 
-    public FacetInformation(string name, string interfaceName, Type type) {
+    /// <summary>
+    /// Contrutor
+    /// </summary>
+    /// <param name="name">O nome da faceta.</param>
+    /// <param name="repositoryId">O tipo da faceta (repositoryID).</param>
+    /// <param name="type">A classe que representa a faceta.</param>
+    public FacetInformation(string name, string repositoryId, Type type) {
       this.name = name;
-      this.interfaceName = interfaceName;
+      this.repositoryId = repositoryId;
       this.type = type;
     }
 
     #endregion
-
   }
 }

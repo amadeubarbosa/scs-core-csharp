@@ -8,6 +8,7 @@ namespace Scs.Core
   /// <summary>
   /// Implementação padrão da interface <i>ComponentContext</i>
   /// </summary>
+  /// <see cref="ComponentContext"/>
   public class DefaultComponentContext : ComponentContext
   {
 
@@ -32,6 +33,10 @@ namespace Scs.Core
 
     #region Constructors
 
+    /// <summary>
+    /// Construtor.
+    /// </summary>
+    /// <param name="componentId">O contexto do componente.</param>
     public DefaultComponentContext(ComponentId componentId) {
       this.componentId = componentId;
 
@@ -43,10 +48,12 @@ namespace Scs.Core
 
     #region ComponentContext Members
 
+    /// <see cref="GetComponentId" />    
     public ComponentId GetComponentId() {
       return this.componentId;
     }
 
+    /// <see cref="GetIComponent" />
     public IComponent GetIComponent() {
       ICollection<Facet> facets = this.facets.Values;
       if (facets == null)
@@ -57,14 +64,15 @@ namespace Scs.Core
         if (facet.RepositoryId == icomponentRepId)
           return facet.ObjectRef as IComponent;
       }
-
       return null;
     }
 
+    /// <see cref="GetFacets" />
     public IDictionary<String, Facet> GetFacets() {
       return this.facets;
     }
 
+    /// <see cref="GetReceptacles" />
     public IDictionary<String, Receptacle> GetReceptacles() {
       return this.receptacles;
     }

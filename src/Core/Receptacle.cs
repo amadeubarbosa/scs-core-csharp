@@ -5,6 +5,9 @@ using scs.core;
 
 namespace Scs.Core
 {
+  /// <summary>
+  /// Representa o receptáculo do componente.
+  /// </summary>
   public class Receptacle
   {
     #region Fields
@@ -12,26 +15,27 @@ namespace Scs.Core
     /// <summary>
     /// Nome do receptáculo.
     /// </summary>
-    private string name;
     public string Name {
       get { return name; }
     }
+    private string name;
 
     /// <summary>
     /// Interface que o receptáculo permite conexão.
     /// </summary>
-    private string repositoryId;
     public string RepositoryId {
       get { return repositoryId; }
     }
+    private string repositoryId;
 
     /// <summary>
     /// Indica se o receptáculo aceita múltiplas conexões.
     /// </summary>
-    private bool isMultiple;
     public bool IsMultiple {
       get { return isMultiple; }
     }
+    private bool isMultiple;
+
     /// <summary>
     /// Coleção de conexões do receptáculo.
     /// </summary>
@@ -49,9 +53,9 @@ namespace Scs.Core
     /// <summary>
     /// Contrutor.
     /// </summary>
-    /// <param name="name"></param>
-    /// <param name="repositoryId"></param>
-    /// <param name="isMultiple"></param>
+    /// <param name="name">O nome do receptáculo.</param>
+    /// <param name="repositoryId">O tipo do receptáculo (RepositoryID).</param>
+    /// <param name="isMultiple">Infomra se o receptáculo é múltiplo.</param>
     public Receptacle(string name, string repositoryId, bool isMultiple) {
       this.name = name;
       this.repositoryId = repositoryId;
@@ -75,7 +79,6 @@ namespace Scs.Core
       if (obj == null)
         return -1;
 
-
       int id = Interlocked.Increment(ref Receptacle.connectionId);
       this.connections.Add(id, obj);
       return id;
@@ -85,7 +88,9 @@ namespace Scs.Core
     /// Remove uma conexão.
     /// </summary>
     /// <param name="id">O identificador da conexão.</param>
-    /// <returns></returns>
+    /// <returns>
+    /// <c>True</c> tenha removido com sucesso. <c>False</c> caso contrário.
+    /// </returns>
     public bool RemoveConnetions(int id) {
       return this.connections.Remove(id);
     }
@@ -93,19 +98,23 @@ namespace Scs.Core
     /// <summary>
     /// Fornece todas as conexões.
     /// </summary>
-    /// <returns></returns>
-    public ConnectionDescription[] GetConnections() {
-      return CreateConnectionDescriptionVector();
+    /// <returns>A lista de conexões do receptáculo.</returns>
+    public List<ConnectionDescription> GetConnections() {
+      List<ConnectionDescription> connectionList = 
+          new List<ConnectionDescription>();
+
+      foreach (var connetion in this.connections) {
+        connectionList.Add(
+            new ConnectionDescription(connetion.Key, connetion.Value));
+      }
+      return connectionList;
     }
 
     /// <summary>
     /// Fornece a conexão desejada.
     /// </summary>
-    /// <param name="id">O identificador da conexão.</param>
-    /// <exception cref="KeyNotFoundException">
-    /// Caso não exista uma chave associada ao id.
-    /// </exception>
-    /// <returns></returns>
+    /// <param name="id">O identificador da conexão.</param>    
+    /// <returns>A conexão desejada.</returns>
     public ConnectionDescription GetConnection(int id) {
       MarshalByRefObject obj = this.connections[id];
       if (obj == null)
@@ -123,27 +132,5 @@ namespace Scs.Core
     }
 
     #endregion
-
-    #region Private Members
-
-    /// <summary>
-    /// Cria um vetor de <i>ConnectionDescription</i>.
-    /// </summary>
-    /// <returns></returns>
-    private ConnectionDescription[] CreateConnectionDescriptionVector() {
-      ConnectionDescription[] connectionsDesc =
-          new ConnectionDescription[this.connections.Count];
-      int counter = 0;
-
-      foreach (var connetion in this.connections) {
-        connectionsDesc[counter++] = new ConnectionDescription(
-            connetion.Key, connetion.Value);
-      }
-      return connectionsDesc;
-    }
-
-    #endregion
-
-
   }
 }

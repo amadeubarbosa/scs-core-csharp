@@ -14,8 +14,18 @@ namespace Scs.Core
   public class ComponentBuilder
   {
 
-    public ComponentContext newComponent(List<FacetInformation> facets,
-      List<ReceptacleDescription> receptacles, ComponentId componentId) {
+    /// <summary>
+    /// Cria um componente.
+    /// </summary>
+    /// <param name="facets">As informações da faceta.</param>
+    /// <param name="receptacles">As informações do receptáculo</param>
+    /// <param name="componentId">O identificador do componente.</param>
+    /// <returns>A representação do componente localmente.</returns>
+    /// <exception cref="SCSException">
+    /// Caso algum erro ocorra na criação do componente.
+    /// </exception>
+    public ComponentContext NewComponent(List<FacetInformation> facets,
+      List<ReceptacleInformation> receptacles, ComponentId componentId) {
 
       if (String.IsNullOrEmpty(componentId.name))
         throw new ArgumentException("'ComponentId' não foi criado corretamente");
@@ -39,6 +49,12 @@ namespace Scs.Core
         AddFacetToComponent(facet, facetObj, context);
       }
 
+      if (receptacles != null) {
+        foreach (ReceptacleInformation recepacle in receptacles) {
+          AddReceptacleToComponent(recepacle, context);
+        }
+      }
+
       return context;
     }
 
@@ -48,12 +64,12 @@ namespace Scs.Core
     /// Cria uma faceta.
     /// </summary>
     /// <param name="facet">A instância da faceta.</param>
-    /// <returns>Falha na criação do objeto.</returns>
+    /// <param name="context">O componente representado pelo contexto.</param>
+    /// <returns>A faceta instanciada.</returns>
+    /// <exception cref="SCSException">Falha na criação do objeto.</exception>    
     private MarshalByRefObject CreateFacet(FacetInformation facet,
         ComponentContext context) {
-      string facetName = facet.name;
-      string facetInterface = facet.interfaceName;
-      Type facetType = facet.type;
+      Type facetType = facet.Type;
 
       ConstructorInfo constructor = facetType.GetConstructor(
         new Type[] { typeof(ComponentContext) });
@@ -75,12 +91,28 @@ namespace Scs.Core
     /// <param name="context">O contexto do componente.</param>
     private void AddFacetToComponent(FacetInformation facet,
         MarshalByRefObject facetObj, ComponentContext context) {
-      string facetName = facet.name;
-      string facetInterface = facet.interfaceName;
+      string facetName = facet.Name;
+      string facetInterface = facet.RepositoryId;
 
       IDictionary<String, Facet> contexFacets = context.GetFacets();
       Facet newFacet = new Facet(facetName, facetInterface, facetObj);
       contexFacets.Add(facetName, newFacet);
+    }
+
+    /// <summary>
+    /// Adiciona um receptáculo ao componente.
+    /// </summary>
+    /// <param name="receptacleInfo">A descrição do receptáculo.</param>
+    /// <param name="context">O contexto do componente.</param>
+    private void AddReceptacleToComponent(ReceptacleInformation receptacleInfo,
+    ComponentContext context) {
+      string name = receptacleInfo.Name;
+      string repositoryId = receptacleInfo.RepositoryId;
+      bool isMultiple = receptacleInfo.IsMultiple;
+
+      Receptacle receptacle = new Receptacle(name, repositoryId, isMultiple);
+      IDictionary<String, Receptacle> receptacles = context.GetReceptacles();
+      receptacles.Add(name, receptacle);
     }
 
     /// <summary>
@@ -93,7 +125,7 @@ namespace Scs.Core
       string componentName = componentType.Name;
       string componentRepId = IiopNetUtil.GetRepositoryId(componentType);
       FacetInformation componnetFacetsFind = facets.Find(
-        delegate(FacetInformation facet) { return facet.name == componentName; });
+        delegate(FacetInformation facet) { return facet.Name == componentName; });
       if (componnetFacetsFind == null) {
         FacetInformation componentFacet = new FacetInformation(componentName,
             componentRepId, typeof(IComponentServant));
@@ -104,7 +136,7 @@ namespace Scs.Core
       string receptacleName = receptacleType.Name;
       string receptacleRepId = IiopNetUtil.GetRepositoryId(receptacleType);
       FacetInformation receptacleFacetsFind = facets.Find(
-        delegate(FacetInformation facet) { return facet.name == receptacleName; });
+        delegate(FacetInformation facet) { return facet.Name == receptacleName; });
       if (receptacleFacetsFind == null) {
         FacetInformation receptacleFacet = new FacetInformation(receptacleName,
             receptacleRepId, typeof(IReceptaclesServant));
@@ -115,7 +147,7 @@ namespace Scs.Core
       string metaInterfaceName = metaInterfaceType.Name;
       string metaInterfaceRepId = IiopNetUtil.GetRepositoryId(metaInterfaceType);
       FacetInformation metaInterfaceFind = facets.Find(
-        delegate(FacetInformation facet) { return facet.name == metaInterfaceName; });
+        delegate(FacetInformation facet) { return facet.Name == metaInterfaceName; });
       if (metaInterfaceFind == null) {
         FacetInformation metaInterfaceFacet = new FacetInformation(
             metaInterfaceName, metaInterfaceRepId, typeof(IMetaInterfaceServant));
@@ -124,6 +156,5 @@ namespace Scs.Core
     }
 
     #endregion
-
   }
 }

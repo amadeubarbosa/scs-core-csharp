@@ -5,6 +5,11 @@ using scs.core;
 
 namespace Scs.Core.Servant
 {
+  /// <summary>
+  /// Servant da interface <i>IMetaInterface</i>. Implementação padrão do
+  /// <i>IMetaInterface</i>.
+  /// </summary>
+  /// <see cref="IMetaInterface"/>
   public class IMetaInterfaceServant : MarshalByRefObject, IMetaInterface
   {
 
@@ -19,6 +24,10 @@ namespace Scs.Core.Servant
 
     #region Contructors
 
+    /// <summary>
+    /// Constutor obrigatório de uma faceta SCS.
+    /// </summary>
+    /// <param name="context">O contexto do Componente.</param>
     public IMetaInterfaceServant(ComponentContext context) {
       this.context = context;
     }
@@ -27,17 +36,30 @@ namespace Scs.Core.Servant
 
     #region IMetaInterface Members
 
+    /// <summary>
+    /// Obtém todas as facetas do componente.
+    /// </summary>
+    /// <returns>O conjunto de descritores de facetas.</returns>
     public FacetDescription[] getFacets() {
       IDictionary<String, Facet> facets = this.context.GetFacets();
 
       return CreateFacetDescriptionVector(facets);
     }
 
+    /// <summary>
+    /// Obtém um conjunto de facetas através de um conjunto de nomes
+    /// de facetas.
+    /// </summary>
+    /// <param name="names">Conjunto de nomes de facetas.</param>
+    /// <returns>O conjunto de descritores de facetas.</returns>
+    /// <exception cref="InvalidName">
+    /// Caso um nome seja inválido.
+    /// </exception>
     public FacetDescription[] getFacetsByName(string[] names) {
       IDictionary<String, Facet> facets = this.context.GetFacets();
       // IDictionary<String, Facet> selectedFacets =
 
-      var filteredFacets = (IDictionary<String, Facet>)
+      var filteredFacets =
           from facet in facets
           where names.Contains(facet.Value.Name.Trim())
           select facet;
@@ -48,6 +70,10 @@ namespace Scs.Core.Servant
       return CreateFacetDescriptionVector(selectedFacets);
     }
 
+    /// <summary>
+    /// Obtém todos os receptáculos do componente.
+    /// </summary>
+    /// <returns>O conjunto de descritores de receptáculos.</returns>
     public ReceptacleDescription[] getReceptacles() {
       IDictionary<String, Receptacle> receptacles =
           this.context.GetReceptacles();
@@ -55,6 +81,12 @@ namespace Scs.Core.Servant
       return CreateReceptacleDescriptionVector(receptacles);
     }
 
+    /// <summary>
+    ///  Obtém um conjunto de receptáculos através de um conjunto de
+    ///  nomes de receptáculos.
+    /// </summary>
+    /// <param name="names">Conjunto de nomes de receptáculos.</param>
+    /// <returns>O conjunto de descritores de receptáculos.</returns>
     public ReceptacleDescription[] getReceptaclesByName(string[] names) {
       IDictionary<String, Receptacle> receptacles =
           this.context.GetReceptacles();
@@ -65,7 +97,7 @@ namespace Scs.Core.Servant
           select receptacle;
 
       IDictionary<String, Receptacle> selectedReceptacles =
-          (IDictionary<String, Receptacle>)filteredReceptacles;
+          filteredReceptacles as IDictionary<String, Receptacle>;
 
       return CreateReceptacleDescriptionVector(selectedReceptacles);
     }
@@ -88,7 +120,6 @@ namespace Scs.Core.Servant
         facetDesc[counter++] = new FacetDescription(facet.Name,
           facet.RepositoryId, facet.ObjectRef);
       }
-
       return facetDesc;
     }
 
@@ -105,9 +136,9 @@ namespace Scs.Core.Servant
 
       foreach (Receptacle recep in receptacles.Values) {
         receptacleDesc[counter++] = new ReceptacleDescription(recep.Name,
-            recep.RepositoryId, recep.IsMultiple, recep.GetConnections());
+            recep.RepositoryId, recep.IsMultiple, 
+            recep.GetConnections().ToArray());
       }
-
       return receptacleDesc;
     }
 

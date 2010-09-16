@@ -2,6 +2,9 @@
 
 namespace Scs.Core
 {
+  /// <summary>
+  /// Representa a faceta do componente.
+  /// </summary>
   public class Facet
   {
 
@@ -10,50 +13,50 @@ namespace Scs.Core
     /// <summary>
     /// Nome da faceta
     /// </summary>
-    private string _name;
     public string Name {
       get {
-        return _name;
+        return name;
       }
     }
+    private string name;
 
     /// <summary>
     /// Interface que a faceta implementa.
     /// </summary>
-    private string _repositoryId;
     public string RepositoryId {
       get {
-        return _repositoryId;
+        return repositoryId;
       }
     }
+    private string repositoryId;
 
     /// <summary>
     /// Objeto CORBA da faceta.
     /// </summary>
-    private MarshalByRefObject _objectRef;
     public MarshalByRefObject ObjectRef {
       get {
-        return _objectRef;
+        return objectRef;
       }
     }
+    private MarshalByRefObject objectRef;
+
     #endregion
 
 
     #region Contructors
 
     /// <summary>
-    /// Construtor
+    /// Construtor.
     /// </summary>
-    /// <param name="name"></param>
-    /// <param name="repositoryId"></param>
-    /// <param name="objRef"></param>
+    /// <param name="name">O nome da faceta.</param>
+    /// <param name="repositoryId">O tipo da faceta (repositoryID).</param>
+    /// <param name="objRef">O objeto CORBA que representa a faceta.</param>
     public Facet(string name, string repositoryId, MarshalByRefObject objRef) {
-      this._name = name;
-      this._repositoryId = repositoryId;
-      this._objectRef = objRef;
+      this.name = name;
+      this.repositoryId = repositoryId;
+      this.objectRef = objRef;
     }
 
     #endregion
-
   }
 }

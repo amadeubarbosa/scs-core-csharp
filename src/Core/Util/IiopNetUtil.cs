@@ -19,14 +19,21 @@ namespace Scs.Core.Util
       return orb.is_a(obj, repositoryId);
     }
 
+    /// <summary>
+    /// Obtém o repositoryID do tipo informado.
+    /// </summary>
+    /// <param name="type">O tipo da classe.</param>
+    /// <returns>O repositoryID.</returns>
     public static string GetRepositoryId(Type type) {
       return Repository.GetRepositoryID(type);
     }
 
+    /// <summary>
+    /// Permite que a faceta seja vista remotamente.
+    /// </summary>
+    /// <param name="facetObj">Uma instância do servant.</param>
     public static void ActivateFacet(MarshalByRefObject facetObj) {
       RemotingServices.Marshal(facetObj);
     }
-
-
   }
 }
