@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using scs.core;
 using scs.demos.pingpong;
 using Scs.Core;
 
 namespace Server
 {
-  class PingPongServant : MarshalByRefObject, PingPongServer
+  public class PongServant : MarshalByRefObject, PingPongServer
   {
     #region Fields
 
@@ -17,10 +16,10 @@ namespace Server
 
     #region Contructors
 
-    public PingPongServant(ComponentContext context) {
+    public PongServant(ComponentContext context) {
       this.context = context;
     }
-    
+
     #endregion
 
 
@@ -35,11 +34,16 @@ namespace Server
     }
 
     public void ping() {
-      throw new NotImplementedException();
+      Console.WriteLine("[Executando o método ping no componente Ping]");
+      Receptacle receptacle = context.GetReceptacles()["PingRec"];
+      foreach (ConnectionDescription connection in receptacle.GetConnections()) {
+        PingPongServer pingPongServer = connection.objref as PingPongServer;
+        pingPongServer.ping();
+      }
     }
 
     public void pong() {
-      throw new NotImplementedException();
+      Console.WriteLine("Pong!");
     }
 
     public void setId(int identifier) {
