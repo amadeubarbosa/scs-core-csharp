@@ -8,7 +8,7 @@
     <ProjectGuid>{04BF15CF-AB3B-4712-BDBE-575A1A7AA35C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Scs</RootNamespace>
+    <RootNamespace>Scs.Core</RootNamespace>
     <AssemblyName>Scs</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -54,18 +54,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Core\ComponentBuilder.cs" />
-    <Compile Include="src\Core\ComponentContext.cs" />
-    <Compile Include="src\Core\DefaultComponentContext.cs" />
-    <Compile Include="src\Core\Exception\SCSException.cs" />
-    <Compile Include="src\Core\Facet.cs" />
-    <Compile Include="src\Core\FacetInformation.cs" />
-    <Compile Include="src\Core\Receptacle.cs" />
-    <Compile Include="src\Core\ReceptacleInformation.cs" />
-    <Compile Include="src\Core\Servant\IComponentServant.cs" />
-    <Compile Include="src\Core\Servant\IMetaInterfaceServant.cs" />
-    <Compile Include="src\Core\Servant\IReceptaclesServant.cs" />
-    <Compile Include="src\Core\Util\IiopNetUtil.cs" />
+    <Compile Include="src\ComponentBuilder.cs" />
+    <Compile Include="src\ComponentContext.cs" />
+    <Compile Include="src\DefaultComponentContext.cs" />
+    <Compile Include="src\Exception\SCSException.cs" />
+    <Compile Include="src\Facet.cs" />
+    <Compile Include="src\FacetInformation.cs" />
+    <Compile Include="src\Receptacle.cs" />
+    <Compile Include="src\ReceptacleInformation.cs" />
+    <Compile Include="src\Servant\IComponentServant.cs" />
+    <Compile Include="src\Servant\IMetaInterfaceServant.cs" />
+    <Compile Include="src\Servant\IReceptaclesServant.cs" />
+    <Compile Include="src\Util\IiopNetUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ScsKey.snk" />
