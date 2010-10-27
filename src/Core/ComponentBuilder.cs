@@ -25,12 +25,34 @@ namespace Scs.Core
     /// Caso algum erro ocorra na criação do componente.
     /// </exception>
     public ComponentContext NewComponent(List<FacetInformation> facets,
-      List<ReceptacleInformation> receptacles, ComponentId componentId) {
-
+        List<ReceptacleInformation> receptacles, ComponentId componentId) {
       if (String.IsNullOrEmpty(componentId.name))
         throw new ArgumentException("'ComponentId' não foi criado corretamente");
 
       ComponentContext context = new DefaultComponentContext(componentId);
+
+      return NewComponent(facets, receptacles, componentId, context);
+    }
+
+    /// <summary>
+    /// Cria um componente.
+    /// </summary>
+    /// <param name="facets">As informações da faceta.</param>
+    /// <param name="receptacles">As informações do receptáculo</param>
+    /// <param name="componentId">O identificador do componente.</param>
+    /// <param name="context">O componente representado localmente.</param>
+    /// <returns>A representação do componente localmente.</returns>
+    /// <exception cref="SCSException">
+    /// Caso algum erro ocorra na criação do componente.
+    /// </exception>
+    public ComponentContext NewComponent(List<FacetInformation> facets,
+        List<ReceptacleInformation> receptacles, ComponentId componentId,
+        ComponentContext context) {
+
+      if (String.IsNullOrEmpty(componentId.name))
+        throw new ArgumentException("'ComponentId' não foi criado corretamente");
+      if (context == null)
+        throw new ArgumentNullException("context");
 
       List<Facet> instantiatedFacets = new List<Facet>();
       if (facets != null) {
@@ -53,12 +75,31 @@ namespace Scs.Core
     }
 
     /// <summary>
-    /// Cria um componente a partir de facetas não instanciada.
+    /// Cria um componente a partir de facetas já instanciada.
     /// </summary>
     /// <param name="facets">A lista de facetas instanciadas.</param>
     /// <param name="receptacles">A lista de receptáculos instanciados.</param>
     /// <param name="componentId">O identificador do componente.</param>
-    /// <param name="context">O componente representado localmente. </param>
+    /// <returns>A representação do componente localmente.</returns>
+    /// <exception cref="SCSException">
+    /// Falha na criação do componente.
+    /// </exception>  
+    public ComponentContext NewComponent(List<Facet> facets,
+        List<Receptacle> receptacles, ComponentId componentId) {
+      if (String.IsNullOrEmpty(componentId.name))
+        throw new ArgumentException("'ComponentId' não foi criado corretamente");
+
+      ComponentContext context = new DefaultComponentContext(componentId);
+      return NewComponent(facets, receptacles, componentId, context);
+    }
+
+    /// <summary>
+    /// Cria um componente a partir de facetas já instanciada.
+    /// </summary>
+    /// <param name="facets">A lista de facetas instanciadas.</param>
+    /// <param name="receptacles">A lista de receptáculos instanciados.</param>
+    /// <param name="componentId">O identificador do componente.</param>
+    /// <param name="context">O componente representado localmente.</param>
     /// <returns>A representação do componente localmente.</returns>
     /// <exception cref="SCSException">
     /// Falha na criação do componente.
@@ -67,13 +108,10 @@ namespace Scs.Core
         List<Receptacle> receptacles, ComponentId componentId, ComponentContext context) {
       if (String.IsNullOrEmpty(componentId.name))
         throw new ArgumentException("'ComponentId' não foi criado corretamente");
-
-      if (context == null) {
-        context = new DefaultComponentContext(componentId);
-      }
+      if (context == null)
+        throw new ArgumentNullException("context");
 
       AddBasicFacets(facets, context);
-
       IDictionary<String, Facet> facetsContext = context.GetFacets();
       foreach (Facet facet in facets) {
         facetsContext.Add(facet.Name, facet);
