@@ -31,7 +31,7 @@ namespace Scs.Core
 
       ComponentContext context = new DefaultComponentContext(componentId);
 
-      return NewComponent(facets, receptacles, componentId, context);
+      return NewComponent(facets, receptacles, context);
     }
 
     /// <summary>
@@ -39,18 +39,14 @@ namespace Scs.Core
     /// </summary>
     /// <param name="facets">As informações da faceta.</param>
     /// <param name="receptacles">As informações do receptáculo</param>
-    /// <param name="componentId">O identificador do componente.</param>
     /// <param name="context">O componente representado localmente.</param>
     /// <returns>A representação do componente localmente.</returns>
     /// <exception cref="SCSException">
     /// Caso algum erro ocorra na criação do componente.
     /// </exception>
     public ComponentContext NewComponent(List<FacetInformation> facets,
-        List<ReceptacleInformation> receptacles, ComponentId componentId,
-        ComponentContext context) {
+        List<ReceptacleInformation> receptacles, ComponentContext context) {
 
-      if (String.IsNullOrEmpty(componentId.name))
-        throw new ArgumentException("'ComponentId' não foi criado corretamente");
       if (context == null)
         throw new ArgumentNullException("context");
 
@@ -71,7 +67,7 @@ namespace Scs.Core
       }
 
       return NewComponent(instantiatedFacets,
-          instantiatedReceptacles, componentId, context);
+          instantiatedReceptacles, context);
     }
 
     /// <summary>
@@ -90,7 +86,7 @@ namespace Scs.Core
         throw new ArgumentException("'ComponentId' não foi criado corretamente");
 
       ComponentContext context = new DefaultComponentContext(componentId);
-      return NewComponent(facets, receptacles, componentId, context);
+      return NewComponent(facets, receptacles, context);
     }
 
     /// <summary>
@@ -98,16 +94,13 @@ namespace Scs.Core
     /// </summary>
     /// <param name="facets">A lista de facetas instanciadas.</param>
     /// <param name="receptacles">A lista de receptáculos instanciados.</param>
-    /// <param name="componentId">O identificador do componente.</param>
     /// <param name="context">O componente representado localmente.</param>
     /// <returns>A representação do componente localmente.</returns>
     /// <exception cref="SCSException">
     /// Falha na criação do componente.
     /// </exception>  
     public ComponentContext NewComponent(List<Facet> facets,
-        List<Receptacle> receptacles, ComponentId componentId, ComponentContext context) {
-      if (String.IsNullOrEmpty(componentId.name))
-        throw new ArgumentException("'ComponentId' não foi criado corretamente");
+        List<Receptacle> receptacles, ComponentContext context) {
       if (context == null)
         throw new ArgumentNullException("context");
 
