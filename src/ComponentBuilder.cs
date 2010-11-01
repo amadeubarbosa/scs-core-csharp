@@ -118,20 +118,35 @@ namespace Scs.Core
       return context;
     }
 
+    /// <summary>
+    /// Desativa o componente.
+    /// </summary>
+    /// <param name="context">O componente representado localmente.</param>
+    /// <exception cref="System.Security.SecurityException"></exception>
+    public void DeactivateComponent(ComponentContext context) {
+      if (context == null)
+        throw new ArgumentNullException("context");
+
+      ICollection<Facet> facets = context.GetFacets().Values;
+      foreach (Facet facet in facets) {
+        facet.Deactivate();
+      }      
+    }
+
     #region Private Methods
 
     /// <summary>
     /// Cria uma faceta.
     /// </summary>
-    /// <param name="facet">
+    /// <param name="facetInfo">
     /// As informações necessárias para criação da faceta.
     /// </param>
     /// <param name="context">O componente representado localmente.</param>
     /// <returns>A faceta instanciada.</returns>
     /// <exception cref="SCSException">Falha na criação do objeto.</exception>
-    private Facet CreateFacet(FacetInformation facet,
+    private Facet CreateFacet(FacetInformation facetInfo,
         ComponentContext context) {
-      Type facetType = facet.Type;
+      Type facetType = facetInfo.Type;
 
       ConstructorInfo constructor = facetType.GetConstructor(
         new Type[] { typeof(ComponentContext) });
@@ -147,12 +162,12 @@ namespace Scs.Core
         throw new SCSException(
           "Faceta não pode ser instanciada como um objeto remoto");
       }
-      IiopNetUtil.ActivateFacet(facetObj);
+      string facetName = facetInfo.Name;
+      string facetInterface = facetInfo.RepositoryId;
+      Facet facet = new Facet(facetName, facetInterface, facetObj);
+      facet.Activate();
 
-      string facetName = facet.Name;
-      string facetInterface = facet.RepositoryId;
-
-      return new Facet(facetName, facetInterface, facetObj);
+      return facet;
     }
 
     /// <summary>
@@ -183,10 +198,10 @@ namespace Scs.Core
         delegate(Facet facet) { return facet.Name == icomponentName; });
       if (icomponnetFacetsFind == null) {
         IComponent icomponent = new IComponentServant(context);
-        MarshalByRefObject icomponentObj = icomponent as MarshalByRefObject;
-        IiopNetUtil.ActivateFacet(icomponentObj);
+        MarshalByRefObject icomponentObj = icomponent as MarshalByRefObject;        
         Facet icomponentFacet = new Facet(
             icomponentName, icomponentRepId, icomponentObj);
+        icomponentFacet.Activate();
 
         facets.Add(icomponentFacet);
       }
@@ -198,10 +213,10 @@ namespace Scs.Core
         delegate(Facet facet) { return facet.Name == receptacleName; });
       if (receptacleFacetsFind == null) {
         IReceptacles receptacle = new IReceptaclesServant(context);
-        MarshalByRefObject receptacleObj = receptacle as MarshalByRefObject;
-        IiopNetUtil.ActivateFacet(receptacleObj);
+        MarshalByRefObject receptacleObj = receptacle as MarshalByRefObject;        
         Facet receptacleFacet = new Facet(
             receptacleName, receptacleRepId, receptacleObj);
+        receptacleFacet.Activate();
 
         facets.Add(receptacleFacet);
       }
@@ -213,10 +228,10 @@ namespace Scs.Core
         delegate(Facet facet) { return facet.Name == metaInterfaceName; });
       if (metaInterfaceFind == null) {
         IMetaInterface metaInterface = new IMetaInterfaceServant(context);
-        MarshalByRefObject metaInterfaceObj = metaInterface as MarshalByRefObject;
-        IiopNetUtil.ActivateFacet(metaInterfaceObj);
+        MarshalByRefObject metaInterfaceObj = metaInterface as MarshalByRefObject;        
         Facet metaInterfaceFacet = new Facet(
             metaInterfaceName, metaInterfaceRepId, metaInterfaceObj);
+        metaInterfaceFacet.Activate();
       }
     }
 

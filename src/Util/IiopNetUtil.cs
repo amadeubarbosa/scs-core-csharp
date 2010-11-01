@@ -32,8 +32,19 @@ namespace Scs.Core.Util
     /// Permite que a faceta seja vista remotamente.
     /// </summary>
     /// <param name="facetObj">Uma instância do servant.</param>
-    public static void ActivateFacet(MarshalByRefObject facetObj) {
-      RemotingServices.Marshal(facetObj);
+    /// <exception cref="System.Security.SecurityException"></exception>
+    /// <exception cref="System.Runtime.Remoting.RemotingException"></exception>
+    public static ObjRef ActivateFacet(MarshalByRefObject facetObj) {
+      return RemotingServices.Marshal(facetObj);
+    }
+
+    /// <summary>
+    /// Permite que a faceta seja desativada.
+    /// </summary>
+    /// <param name="facetObj">Uma instância do servant.</param>
+    /// <exception cref="System.Security.SecurityException"></exception>
+    public static void DeactivateFacet(MarshalByRefObject facetObj) {
+      RemotingServices.Disconnect(facetObj);
     }
   }
 }

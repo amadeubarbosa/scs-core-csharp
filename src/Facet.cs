@@ -1,4 +1,5 @@
 ﻿using System;
+using Scs.Core.Util;
 
 namespace Scs.Core
 {
@@ -35,10 +36,19 @@ namespace Scs.Core
     /// </summary>
     public MarshalByRefObject ObjectRef {
       get {
-        return objectRef;
+        return isActive ? objectRef : null;
       }
     }
     private MarshalByRefObject objectRef;
+
+    /// <summary>
+    /// <para>Informa se a faceta está ativa.</para>
+    /// <para>
+    /// Esta <i>flag</i> é necessária porque o método de desativação não 
+    /// funciona adequadamente.
+    /// </para>
+    /// </summary>
+    private bool isActive;
 
     #endregion
 
@@ -55,6 +65,23 @@ namespace Scs.Core
       this.name = name;
       this.repositoryId = repositoryId;
       this.objectRef = objRef;
+      this.isActive = false;
+    }
+
+    /// <summary>
+    /// Ativa a faceta.
+    /// </summary>
+    public void Activate() {
+      IiopNetUtil.ActivateFacet(this.ObjectRef);
+      this.isActive = true;
+    }
+
+    /// <summary>
+    /// Desativa a faceta.
+    /// </summary>
+    public void Deactivate() {
+      IiopNetUtil.DeactivateFacet(this.ObjectRef);
+      this.isActive = false;
     }
 
     #endregion
