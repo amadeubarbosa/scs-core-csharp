@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Xml;
 using scs.core;
 using Scs.Core.Exception;
 using Scs.Core.Servant;
@@ -116,6 +117,24 @@ namespace Scs.Core
       }
 
       return context;
+    }
+
+    /// <summary>
+    /// <para>Cria um componente a partir de um arquivo xml.</para>
+    /// <para>
+    /// O arquivo xml deve seguir o schema ComponentModel.xsd.
+    /// </para>
+    /// </summary>
+    /// <param name="componentInfomation">O Xml que representa o componente.</param>
+    /// <returns></returns>
+    public ComponentContext NewComponent(XmlTextReader componentInfomation) {
+
+      XmlComponentParser xmlComponent = new XmlComponentParser(componentInfomation);
+      ComponentId componentId = xmlComponent.getComponentId();
+      List<FacetInformation> facets = xmlComponent.getFacets();
+      List<ReceptacleInformation> receptacles = xmlComponent.getReceptacles();
+
+      return NewComponent(facets, receptacles, componentId);
     }
 
     /// <summary>

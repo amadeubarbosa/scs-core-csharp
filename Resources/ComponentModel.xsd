@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<xs:schema id="XMLSchema1"   targetNamespace="tecgraf.scs.core"
+    elementFormDefault="qualified" xmlns="http://tempuri.org/XMLSchema1.xsd"
+    xmlns:mstns="http://tempuri.org/XMLSchema1.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="component">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="id">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="name" type="xs:string" />
+              <xs:element name="version">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[\d]+.[\d]+.[\d]+"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+        <xs:element name="platform_spec" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="facets">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="facet">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="name" type="xs:string" />
+              <xs:element name="repId" type="xs:string" />
+              <xs:element name="type">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="fullName" type="xs:string" />
+                    <xs:element name="assembly" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="receptacles">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="receptacle">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="name" type="xs:string" />
+              <xs:element name="repId" type="xs:string" />
+              <xs:element name="isMultiple" type="xs:boolean" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  </xs:sequence>
+  </xs:complexType>
+  </xs:element>
+</xs:schema>
