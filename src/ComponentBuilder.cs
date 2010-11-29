@@ -198,7 +198,7 @@ namespace Scs.Core
         delegate(Facet facet) { return facet.Name == icomponentName; });
       if (icomponnetFacetsFind == null) {
         IComponent icomponent = new IComponentServant(context);
-        MarshalByRefObject icomponentObj = icomponent as MarshalByRefObject;        
+        MarshalByRefObject icomponentObj = icomponent as MarshalByRefObject;
         Facet icomponentFacet = new Facet(
             icomponentName, icomponentRepId, icomponentObj);
         icomponentFacet.Activate();
@@ -213,7 +213,7 @@ namespace Scs.Core
         delegate(Facet facet) { return facet.Name == receptacleName; });
       if (receptacleFacetsFind == null) {
         IReceptacles receptacle = new IReceptaclesServant(context);
-        MarshalByRefObject receptacleObj = receptacle as MarshalByRefObject;        
+        MarshalByRefObject receptacleObj = receptacle as MarshalByRefObject;
         Facet receptacleFacet = new Facet(
             receptacleName, receptacleRepId, receptacleObj);
         receptacleFacet.Activate();
@@ -228,10 +228,12 @@ namespace Scs.Core
         delegate(Facet facet) { return facet.Name == metaInterfaceName; });
       if (metaInterfaceFind == null) {
         IMetaInterface metaInterface = new IMetaInterfaceServant(context);
-        MarshalByRefObject metaInterfaceObj = metaInterface as MarshalByRefObject;        
+        MarshalByRefObject metaInterfaceObj = metaInterface as MarshalByRefObject;
         Facet metaInterfaceFacet = new Facet(
             metaInterfaceName, metaInterfaceRepId, metaInterfaceObj);
         metaInterfaceFacet.Activate();
+
+        facets.Add(metaInterfaceFacet);
       }
     }
 
