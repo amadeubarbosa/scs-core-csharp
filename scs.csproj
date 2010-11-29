@@ -80,10 +80,6 @@
     <None Include="ScsKey.snk" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="src\Component.xml">
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
