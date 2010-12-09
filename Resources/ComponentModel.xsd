@@ -12,29 +12,63 @@
             <xs:sequence>
               <xs:element name="name" type="xs:string" />
               <xs:element name="version">
-              <xs:simpleType>
-                <xs:restriction base="xs:string">
-                  <xs:pattern value="[\d]+.[\d]+.[\d]+"/>
-                </xs:restriction>
-              </xs:simpleType>
-            </xs:element>
-        <xs:element name="platform_spec" type="xs:string" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="facets">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="facet">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:pattern value="[\d]+.[\d]+.[\d]+"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="platformSpec" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="context" minOccurs="0">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="name" type="xs:string" />
-              <xs:element name="repId" type="xs:string" />
               <xs:element name="type">
                 <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute name="assembly" type="xs:string" default="unused"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="facets" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="facet" maxOccurs="unbounded">
+                <xs:complexType>
                   <xs:sequence>
-                    <xs:element name="fullName" type="xs:string" />
-                    <xs:element name="assembly" type="xs:string" />
+                    <xs:element name="name" type="xs:string" />
+                    <xs:element name="repId" type="xs:string" />
+                    <xs:element name="servant">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute name="assembly" type="xs:string" default="unused"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="receptacles" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="receptacle" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="name" type="xs:string" />
+                    <xs:element name="repId" type="xs:string" />
+                    <xs:element name="isMultiplex" type="xs:boolean" />
                   </xs:sequence>
                 </xs:complexType>
               </xs:element>
@@ -43,23 +77,5 @@
         </xs:element>
       </xs:sequence>
     </xs:complexType>
-  </xs:element>
-  <xs:element name="receptacles">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="receptacle">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element name="name" type="xs:string" />
-              <xs:element name="repId" type="xs:string" />
-              <xs:element name="isMultiple" type="xs:boolean" />
-            </xs:sequence>
-          </xs:complexType>
-        </xs:element>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  </xs:sequence>
-  </xs:complexType>
   </xs:element>
 </xs:schema>

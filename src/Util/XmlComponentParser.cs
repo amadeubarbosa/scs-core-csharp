@@ -17,19 +17,21 @@ namespace Scs.Core.Util
     private const string COMPONENT_ID_ELEMENT = "id";
     private const string COMPONENT_ID_NAME = "name";
     private const string COMPONENT_VERSION = "version";
-    private const string COMPONENT_PLATFORM_SPEC = "platform_spec";
+    private const string COMPONENT_PLATFORM_SPEC = "platformSpec";
+    private const string COMPONENT_CONTEXT_ELEMENT = "context";
+    private const string COMPONENT_CONTEXT_TYPE = "type";
+    private const string COMPONENT_CONTEXT_ASSEMBLY_ATTRIBUTE = "assembly";
     private const string FACETS_ELEMENT = "facets";
     private const string FACET_ELEMENT = "facet";
     private const string FACET_NAME = "name";
     private const string FACET_REP_ID = "repId";
-    private const string FACET_TYPE = "type";
-    private const string FACET_TYPE_NAME = "fullName";
-    private const string FACET_TYPE_ASSEMBLY = "assembly";
+    private const string FACET_SERVANT = "servant";
+    private const string FACET_SERVANT_ASSEMBLY_ATTRIBUTE = "assembly";
     private const string RECEPTACLES_ELEMENT = "receptacles";
     private const string RECEPTACLE_ELEMENT = "receptacle";
     private const string RECEPTACLE_NAME = "name";
     private const string RECEPTACLE_REP_ID = "repId";
-    private const string RECEPTACLE_MULTIPLE = "isMultiple";
+    private const string RECEPTACLE_MULTIPLE = "isMultiplex";
 
     #endregion
 
@@ -73,7 +75,7 @@ namespace Scs.Core.Util
 
     #region Public Members
 
-    public ComponentId getComponentId() {
+    public ComponentId GetComponentId() {
       XmlNode componentIdNode =
           xmlComponent.GetElementsByTagName(COMPONENT_ID_ELEMENT)[0];
       String componetName = componentIdNode[COMPONENT_ID_NAME].InnerText;
@@ -88,7 +90,7 @@ namespace Scs.Core.Util
           patchVersion, componentSpec);
     }
 
-    public List<FacetInformation> getFacets() {
+    public List<FacetInformation> GetFacets() {
       XmlNodeList facetsNodeList =
           xmlComponent.GetElementsByTagName(FACET_ELEMENT);
 
@@ -96,10 +98,10 @@ namespace Scs.Core.Util
       foreach (XmlNode facetNode in facetsNodeList) {
         String name = facetNode[FACET_NAME].InnerText;
         String repId = facetNode[FACET_REP_ID].InnerText;
-        XmlElement typeElement = facetNode[FACET_TYPE];
-        String nameType= typeElement[FACET_TYPE_NAME].InnerText;
-        String assemblyType = typeElement[FACET_TYPE_ASSEMBLY].InnerText;
-        String type = nameType + ", " + assemblyType;
+        XmlNode servant = facetNode[FACET_SERVANT];
+        String servantName = servant.InnerText;
+        String servantAssembly = servant.Attributes[FACET_SERVANT_ASSEMBLY_ATTRIBUTE].InnerText;
+        String type = servantName + ", " + servantAssembly;
 
         facets.Add(new FacetInformation(name, repId, Type.GetType(type)));
       }
@@ -107,7 +109,7 @@ namespace Scs.Core.Util
       return facets;
     }
 
-    public List<ReceptacleInformation> getReceptacles() {
+    public List<ReceptacleInformation> GetReceptacles() {
       XmlNodeList receptaclesNodeList =
           xmlComponent.GetElementsByTagName(RECEPTACLE_ELEMENT);
 
@@ -122,6 +124,29 @@ namespace Scs.Core.Util
       }
 
       return receptacles;
+    }
+
+    public ComponentContext GetComponentContext(ComponentId componentId) {
+      XmlNode componentContextNode =
+          xmlComponent.GetElementsByTagName(COMPONENT_CONTEXT_ELEMENT)[0];
+      XmlNode context = componentContextNode[COMPONENT_CONTEXT_TYPE];
+      String contextName = context.InnerText;
+      String contextAssembly = context.Attributes[COMPONENT_CONTEXT_ASSEMBLY_ATTRIBUTE].InnerText;
+      String type = contextName + ", " + contextAssembly;
+      Type contextType = Type.GetType(type);
+      if (contextType == null) {
+        throw new SCSException(String.Format(
+          "Não foi possível encontrar a classe '{0}'", type));
+      }
+
+      System.Reflection.ConstructorInfo constructor =
+          contextType.GetConstructor(new Type[] { typeof(ComponentId) });
+      if (constructor == null) {
+        string errorMsg = "Implementação do componentContext deve possuir um" +
+          "contrutor com um parametro do tipo 'ComponentId'";
+        throw new SCSException(errorMsg);
+      }
+      return constructor.Invoke(new Object[] { componentId }) as ComponentContext;
     }
 
     #endregion

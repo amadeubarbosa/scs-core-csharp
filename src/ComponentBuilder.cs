@@ -130,11 +130,15 @@ namespace Scs.Core
     public ComponentContext NewComponent(XmlTextReader componentInfomation) {
 
       XmlComponentParser xmlComponent = new XmlComponentParser(componentInfomation);
-      ComponentId componentId = xmlComponent.getComponentId();
-      List<FacetInformation> facets = xmlComponent.getFacets();
-      List<ReceptacleInformation> receptacles = xmlComponent.getReceptacles();
+      ComponentId componentId = xmlComponent.GetComponentId();
+      List<FacetInformation> facets = xmlComponent.GetFacets();
+      List<ReceptacleInformation> receptacles = xmlComponent.GetReceptacles();
+      ComponentContext componentContext = xmlComponent.GetComponentContext(componentId);
 
-      return NewComponent(facets, receptacles, componentId);
+      if (componentContext == null)
+        return NewComponent(facets, receptacles, componentId);
+      else
+        return NewComponent(facets, receptacles, componentContext);
     }
 
     /// <summary>
@@ -149,7 +153,7 @@ namespace Scs.Core
       ICollection<Facet> facets = context.GetFacets().Values;
       foreach (Facet facet in facets) {
         facet.Deactivate();
-      }      
+      }
     }
 
     #region Private Methods
@@ -166,6 +170,10 @@ namespace Scs.Core
     private Facet CreateFacet(FacetInformation facetInfo,
         ComponentContext context) {
       Type facetType = facetInfo.Type;
+      if (facetType == null) {
+        throw new SCSException(String.Format(
+          "Não foi possível encontrar a classe '{0}'", facetType));
+      }
 
       ConstructorInfo constructor = facetType.GetConstructor(
         new Type[] { typeof(ComponentContext) });
