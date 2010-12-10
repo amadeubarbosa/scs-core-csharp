@@ -74,7 +74,7 @@
     <Compile Include="src\Util\XmlComponentParser.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\ComponentModel.xsd">
+    <None Include="..\..\resources\trunk\ComponentModel.xsd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="ScsKey.snk" />

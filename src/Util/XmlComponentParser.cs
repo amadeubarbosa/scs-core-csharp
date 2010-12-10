@@ -129,6 +129,9 @@ namespace Scs.Core.Util
     public ComponentContext GetComponentContext(ComponentId componentId) {
       XmlNode componentContextNode =
           xmlComponent.GetElementsByTagName(COMPONENT_CONTEXT_ELEMENT)[0];
+      if (componentContextNode == null) {
+        return null;
+      }
       XmlNode context = componentContextNode[COMPONENT_CONTEXT_TYPE];
       String contextName = context.InnerText;
       String contextAssembly = context.Attributes[COMPONENT_CONTEXT_ASSEMBLY_ATTRIBUTE].InnerText;
