@@ -24,13 +24,13 @@ namespace Scs.Core.Util
     private const string FACETS_ELEMENT = "facets";
     private const string FACET_ELEMENT = "facet";
     private const string FACET_NAME = "name";
-    private const string FACET_REP_ID = "repId";
-    private const string FACET_SERVANT = "servant";
+    private const string FACET_REP_ID = "interfaceName";
+    private const string FACET_SERVANT = "facetImpl";
     private const string FACET_SERVANT_ASSEMBLY_ATTRIBUTE = "assembly";
     private const string RECEPTACLES_ELEMENT = "receptacles";
     private const string RECEPTACLE_ELEMENT = "receptacle";
     private const string RECEPTACLE_NAME = "name";
-    private const string RECEPTACLE_REP_ID = "repId";
+    private const string RECEPTACLE_REP_ID = "interfaceName";
     private const string RECEPTACLE_MULTIPLE = "isMultiplex";
 
     #endregion
