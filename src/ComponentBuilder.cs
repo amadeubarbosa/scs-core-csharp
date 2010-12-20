@@ -172,7 +172,7 @@ namespace Scs.Core
       Type facetType = facetInfo.Type;
       if (facetType == null) {
         throw new SCSException(String.Format(
-          "Não foi possível encontrar a classe '{0}'", facetType));
+          "Não foi possível encontrar a classe '{0}'", facetInfo.Name));
       }
 
       ConstructorInfo constructor = facetType.GetConstructor(
@@ -187,7 +187,8 @@ namespace Scs.Core
           new object[] { context }) as MarshalByRefObject;
       if (facetObj == null) {
         throw new SCSException(
-          "Faceta não pode ser instanciada como um objeto remoto");
+          "Faceta não pode ser instanciada como um objeto remoto.\n" +
+          "Certifique-se que seu servant estenda de MarshalByRefObject");        
       }
       string facetName = facetInfo.Name;
       string facetInterface = facetInfo.RepositoryId;
