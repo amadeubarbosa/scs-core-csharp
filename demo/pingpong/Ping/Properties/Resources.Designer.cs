@@ -61,6 +61,33 @@ namespace Ping.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+        ///&lt;component xmlns=&quot;tecgraf.scs.core&quot;&gt;
+        ///  &lt;id&gt;
+        ///    &lt;name&gt;PingPong&lt;/name&gt;
+        ///    &lt;version&gt;1.0.0&lt;/version&gt;
+        ///    &lt;platformSpec&gt;.Net FrameWork 3.5&lt;/platformSpec&gt;
+        ///  &lt;/id&gt;
+        ///  &lt;context&gt;
+        ///    &lt;type assembly=&quot;Ping&quot;&gt;Ping.MyContext&lt;/type&gt;
+        ///  &lt;/context&gt;
+        ///  &lt;facets&gt;
+        ///    &lt;facet&gt;
+        ///      &lt;name&gt;Ping&lt;/name&gt;
+        ///      &lt;repId&gt;IDL:scs/demos/pingpong/PingPongServer:1.0&lt;/repId&gt;
+        ///      &lt;servant assembly=&quot;Ping&quot;&gt;Server.PingServant&lt;/servant&gt;
+        ///    &lt;/facet&gt;
+        ///  &lt;/facets&gt;
+        ///  &lt;receptacles&gt;
+        ///    &lt;recept [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string ComponentDesc {
+            get {
+                return ResourceManager.GetString("ComponentDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ping.ior.
         /// </summary>
         internal static string IorFilename {
