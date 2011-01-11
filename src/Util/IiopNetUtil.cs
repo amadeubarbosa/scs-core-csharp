@@ -11,12 +11,23 @@ namespace Scs.Core.Util
     /// <summary>
     /// Verifica se o objeto CORBA implementa a interface (repository ID).
     /// </summary>
-    /// <param name="obj">O objeto CORBA</param>
-    /// <param name="repositoryId">a interface (repository ID)</param>
+    /// <param name="obj">O objeto CORBA.</param>
+    /// <param name="repositoryId">A interface (repository ID).</param>
     /// <returns></returns>
     public static bool CheckInterface(MarshalByRefObject obj, string repositoryId) {
       OrbServices orb = OrbServices.GetSingleton();
       return orb.is_a(obj, repositoryId);
+    }
+
+    /// <summary>
+    /// Verifica se o objeto CORBA suporta o tipo específico.
+    /// </summary>
+    /// <param name="obj">O objeto CORBA.</param>
+    /// <param name="type">O tipo específico.</param>
+    /// <returns></returns>
+    public static bool CheckInterface(MarshalByRefObject obj, Type type) {
+      OrbServices orb = OrbServices.GetSingleton();
+      return orb.is_a(obj, type);
     }
 
     /// <summary>

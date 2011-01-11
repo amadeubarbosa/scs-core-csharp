@@ -170,9 +170,10 @@ namespace Scs.Core
     private Facet CreateFacet(FacetInformation facetInfo,
         ComponentContext context) {
       Type facetType = facetInfo.Type;
+      string facetName = facetInfo.Name;
       if (facetType == null) {
         throw new SCSException(String.Format(
-          "Não foi possível encontrar a classe '{0}'", facetInfo.Name));
+          "Não foi possível encontrar a classe '{0}'", facetName));
       }
 
       ConstructorInfo constructor = facetType.GetConstructor(
@@ -188,12 +189,17 @@ namespace Scs.Core
       if (facetObj == null) {
         throw new SCSException(
           "Faceta não pode ser instanciada como um objeto remoto.\n" +
-          "Certifique-se que seu servant estenda de MarshalByRefObject");        
+          "Certifique-se que seu servant estenda de MarshalByRefObject");
       }
-      string facetName = facetInfo.Name;
       string facetInterface = facetInfo.RepositoryId;
       Facet facet = new Facet(facetName, facetInterface, facetObj);
       facet.Activate();
+
+      if (!IiopNetUtil.CheckInterface(facetObj, facetInterface)) {
+        string errorMsg = String.Format(
+          "A faceta '{0}' não suporta a interface '{1}'", facetName, facetInterface);
+        throw new SCSException(errorMsg);
+      }
 
       return facet;
     }
@@ -233,6 +239,17 @@ namespace Scs.Core
 
         facets.Add(icomponentFacet);
       }
+      else {
+        bool checkedObj = IiopNetUtil.CheckInterface(
+              icomponnetFacetsFind.ObjectRef, typeof(IComponent));
+        checkedObj = checkedObj && IiopNetUtil.CheckInterface(
+              icomponnetFacetsFind.ObjectRef, icomponnetFacetsFind.RepositoryId);
+        if (!checkedObj) {
+          string message = String.Format("A faceta {0} não implementa o tipo {1}.",
+              icomponentName, icomponentRepId);
+          throw new SCSException(message);
+        }
+      }
 
       Type receptacleType = typeof(IReceptacles);
       string receptacleName = receptacleType.Name;
@@ -248,6 +265,17 @@ namespace Scs.Core
 
         facets.Add(receptacleFacet);
       }
+      else {
+        bool checkedObj = IiopNetUtil.CheckInterface(
+              icomponnetFacetsFind.ObjectRef, typeof(IReceptacles));
+        checkedObj = checkedObj && IiopNetUtil.CheckInterface(
+              receptacleFacetsFind.ObjectRef, receptacleFacetsFind.RepositoryId);
+        if (!checkedObj) {
+          string message = String.Format("A faceta {0} não implementa o tipo {1}.",
+              icomponentName, icomponentRepId);
+          throw new SCSException(message);
+        }
+      }
 
       Type metaInterfaceType = typeof(IMetaInterface);
       string metaInterfaceName = metaInterfaceType.Name;
@@ -262,6 +290,17 @@ namespace Scs.Core
         metaInterfaceFacet.Activate();
 
         facets.Add(metaInterfaceFacet);
+      }
+      else {
+        bool checkedObj = IiopNetUtil.CheckInterface(
+              icomponnetFacetsFind.ObjectRef, typeof(IMetaInterface));
+        checkedObj = checkedObj && IiopNetUtil.CheckInterface(
+              metaInterfaceFind.ObjectRef, metaInterfaceFind.RepositoryId);
+        if (!checkedObj) {
+          string message = String.Format("A faceta {0} não implementa o tipo {1}.",
+              icomponentName, icomponentRepId);
+          throw new SCSException(message);
+        }
       }
     }
 
