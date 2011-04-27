@@ -16,7 +16,12 @@ namespace Scs.Core.Util
     /// <returns></returns>
     public static bool CheckInterface(MarshalByRefObject obj, string repositoryId) {
       OrbServices orb = OrbServices.GetSingleton();
-      return orb.is_a(obj, repositoryId);
+      try {
+        return orb.is_a(obj, repositoryId);
+      }
+      catch (NullReferenceException) {
+        return false;
+      }
     }
 
     /// <summary>
