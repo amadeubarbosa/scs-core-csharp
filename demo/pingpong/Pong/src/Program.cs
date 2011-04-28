@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Remoting.Channels;
+using Ch.Elca.Iiop;
 using Ch.Elca.Iiop.Idl;
+using omg.org.CORBA;
 using scs.core;
 using scs.demos.pingpong;
 using Scs.Core;
-using Ch.Elca.Iiop;
-using System.Runtime.Remoting.Channels;
-using System.IO;
-using omg.org.CORBA;
 
 namespace Server
 {
@@ -50,11 +50,11 @@ namespace Server
       OrbServices orb = OrbServices.GetSingleton();
       IComponent pingComponent = orb.string_to_object(pingIor) as IComponent;
       MarshalByRefObject pingObj = pingComponent.getFacetByName("Ping");
-      
+
       //Recuperar a faceta Pong.
       IComponent pongComponent = pongContext.GetIComponent();
       MarshalByRefObject pongObj = pongComponent.getFacetByName("Pong");
-      
+
       //Conectar o Ping em Pong.      
       IReceptacles pingIReceptacles = pingComponent.getFacetByName("IReceptacles") as IReceptacles;
       pingIReceptacles.connect("PongRec", pongObj);
@@ -74,6 +74,13 @@ namespace Server
       pongServer.ping();
       pongServer.pong();
       Console.WriteLine("--\n");
+
+      MarshalByRefObject faceta = pingComponent.getFacetByName("IMetaInterface");
+      IMetaInterface pingMetaInterface = faceta as IMetaInterface;
+      FacetDescription[] getFacets1 = pingMetaInterface.getFacets();
+      foreach (var f in getFacets1) {
+        Console.WriteLine(f.name + " --- " + f.interface_name);
+      }
 
       Console.WriteLine("Fim");
       Console.ReadLine();

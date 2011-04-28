@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using Ch.Elca.Iiop.Idl;
-using scs.core;
-using scs.demos.pingpong;
-using Scs.Core;
-using Ch.Elca.Iiop;
-using System.Runtime.Remoting.Channels;
-using omg.org.CORBA;
 using System.IO;
+using System.Runtime.Remoting.Channels;
 using System.Threading;
+using System.Xml;
+using Ch.Elca.Iiop;
+using omg.org.CORBA;
+using Ping.Properties;
+using scs.core;
+using Scs.Core;
 
 namespace Server
 {
@@ -17,27 +16,18 @@ namespace Server
     static void Main(string[] args) {
 
       IiopChannel chan = new IiopChannel(0);
-      ChannelServices.RegisterChannel(chan,false);
+      ChannelServices.RegisterChannel(chan, false);
 
       ComponentBuilder builder = new ComponentBuilder();
-
-      Type pingType = typeof(PingServant);      
-      string pingpongRepID = Repository.GetRepositoryID(typeof(PingPongServer));
-
-      //Criando o componente Ping.
-      List<FacetInformation> pingFacets = new List<FacetInformation>();
-      pingFacets.Add(new FacetInformation("Ping", pingpongRepID, pingType));
-
-      List<ReceptacleInformation> pingReceptacles = new List<ReceptacleInformation>();
-      pingReceptacles.Add(new ReceptacleInformation("PongRec", pingpongRepID, false));
-
-      ComponentId pingComponentId = new ComponentId("PingPong", 1, 0, 0, "");
-      ComponentContext pingContext = builder.NewComponent(pingFacets, pingReceptacles, pingComponentId);
+      String componentModel = Resources.ComponentDesc;
+      TextReader file = new StringReader(componentModel);
+      XmlTextReader componentInformation = new XmlTextReader(file);
+      ComponentContext pingContext = builder.NewComponent(componentInformation);
 
       //Escrevendo a IOR do IComponent no arquivo.
       IComponent pingComponent = pingContext.GetIComponent();
       OrbServices orb = OrbServices.GetSingleton();
-      String ior = orb.object_to_string(pingComponent);      
+      String ior = orb.object_to_string(pingComponent);
 
       String iorPath = Ping.Properties.Resources.IorFilename;
       StreamWriter stream = new StreamWriter(iorPath);

@@ -13,7 +13,6 @@ namespace Server
 
     #endregion
 
-
     #region Contructors
 
     public PongServant(ComponentContext context) {
@@ -21,7 +20,6 @@ namespace Server
     }
 
     #endregion
-
 
     #region PingPongServer Members
 
