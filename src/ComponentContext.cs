@@ -56,15 +56,14 @@ namespace Scs.Core
     Receptacle GetReceptacleByName(String name);
 
     /// <summary>
-    /// Adiciona a faceta ao componente. O método ativa a faceta no POA 
-    /// associado ao componente.
+    /// Adiciona a faceta ao componente. O método ativa a faceta.
     /// 
     /// Se já existir uma faceta com o mesmo nome, a faceta antiga será 
     /// desativada e sobrescrita.
     /// </summary>
     /// <param name="name">Nome da faceta.</param>
     /// <param name="interfaceName">Nome da interface (repositoryID)</param>
-    /// <param name="servantNode">A implementação da faceta.</param>
+    /// <param name="servant">A instância da implementação da faceta.</param>
     void PutFacet(String name, String interfaceName, MarshalByRefObject servant);
 
     /// <summary>

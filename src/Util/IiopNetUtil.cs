@@ -14,10 +14,10 @@ namespace Scs.Core.Util
     /// <param name="obj">O objeto CORBA.</param>
     /// <param name="interfaceName">A interface (repository ID).</param>
     /// <returns></returns>
-    public static bool CheckInterface(MarshalByRefObject obj, string repositoryId) {
+    public static bool CheckInterface(MarshalByRefObject obj, string interfaceName) {
       OrbServices orb = OrbServices.GetSingleton();
       try {
-        return orb.is_a(obj, repositoryId);
+        return orb.is_a(obj, interfaceName);
       }
       catch (NullReferenceException) {
         return false;

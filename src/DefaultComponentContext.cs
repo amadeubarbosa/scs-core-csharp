@@ -114,11 +114,12 @@ namespace Scs.Core
       return new Dictionary<String, Receptacle>(receptacles);      
     }
 
-    /// <see cref="GetReceptaclesByName" />    
+    /// <see cref="GetReceptacleByName" />    
     public Receptacle GetReceptacleByName(String name) {
       return receptacles[name];
     }
 
+    /// <see cref="ActivateComponent" />
     public void ActivateComponent() {
       foreach (Facet facet in facets.Values) {
         MarshalByRefObject facetObj = facet.Reference;
@@ -126,6 +127,7 @@ namespace Scs.Core
       }
     }
 
+    /// <see cref="ActivateComponent" /> 
     public void DeactivateComponent() {
       foreach (Facet facet in facets.Values) {
         MarshalByRefObject facetObj = facet.Reference;
@@ -140,8 +142,6 @@ namespace Scs.Core
     /// <summary>
     /// Adiciona as facetas bÃ¡sicas Ã  lista de Facetas criadas pelo usuÃ¡rio.
     /// </summary>
-    /// <param name="facets">A lista de facetas criada pelo usuÃ¡rio.</param>
-    /// <param name="context">O componente representado localmente. </param>
     private void AddBasicFacets() {
 
       Type icomponentType = typeof(IComponent);

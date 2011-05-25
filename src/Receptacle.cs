@@ -56,9 +56,9 @@ namespace Scs.Core
     /// <param name="name">O nome do receptáculo.</param>
     /// <param name="interfaceName">O tipo do receptáculo (RepositoryID).</param>
     /// <param name="isMultiple">Infomra se o receptáculo é múltiplo.</param>
-    public Receptacle(string name, string repositoryId, bool isMultiple) {
+    public Receptacle(string name, string interfaceName, bool isMultiple) {
       this.name = name;
-      this.interfaceName = repositoryId;
+      this.interfaceName = interfaceName;
       this.isMultiple = isMultiple;
       this.connections = new Dictionary<Int32, MarshalByRefObject>();
     }
