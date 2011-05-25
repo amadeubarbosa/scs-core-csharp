@@ -69,7 +69,7 @@ namespace Scs.Core.Servant
           (rec.GetConnectionsSize() > 0))
         throw new AlreadyConnected();
 
-      if (!IiopNetUtil.CheckInterface(obj, rec.RepositoryId))
+      if (!IiopNetUtil.CheckInterface(obj, rec.InterfaceName))
         throw new InvalidConnection();
 
       return rec.AddConnections(obj);

@@ -1,5 +1,6 @@
 ﻿using System;
 using Scs.Core.Util;
+using scs.core;
 
 namespace Scs.Core
 {
@@ -24,34 +25,24 @@ namespace Scs.Core
     /// <summary>
     /// Interface que a faceta implementa.
     /// </summary>
-    public string RepositoryId {
+    public string InterfaceName {
       get {
-        return repositoryId;
+        return interfaceName;
       }
     }
-    private string repositoryId;
+    private string interfaceName;
 
     /// <summary>
-    /// Objeto CORBA da faceta.
+    /// Referência da faceta como um objeto CORBA.
     /// </summary>
-    public MarshalByRefObject ObjectRef {
+    public MarshalByRefObject Reference {
       get {
-        return isActive ? objectRef : null;
+        return reference;
       }
     }
-    private MarshalByRefObject objectRef;
-
-    /// <summary>
-    /// <para>Informa se a faceta está ativa.</para>
-    /// <para>
-    /// Esta <i>flag</i> é necessária porque o método de desativação não 
-    /// funciona adequadamente.
-    /// </para>
-    /// </summary>
-    private bool isActive;
+    private MarshalByRefObject reference;
 
     #endregion
-
 
     #region Contructors
 
@@ -59,29 +50,24 @@ namespace Scs.Core
     /// Construtor.
     /// </summary>
     /// <param name="name">O nome da faceta.</param>
-    /// <param name="repositoryId">O tipo da faceta (repositoryID).</param>
+    /// <param name="interfaceName">O tipo da faceta (repositoryID).</param>
     /// <param name="objRef">O objeto CORBA que representa a faceta.</param>
-    public Facet(string name, string repositoryId, MarshalByRefObject objRef) {
+    public Facet(string name, string interfaceName, MarshalByRefObject objRef) {
       this.name = name;
-      this.repositoryId = repositoryId;
-      this.objectRef = objRef;
-      this.isActive = false;
+      this.interfaceName = interfaceName;
+      this.reference = objRef;
     }
 
-    /// <summary>
-    /// Ativa a faceta.
-    /// </summary>
-    public void Activate() {
-      IiopNetUtil.ActivateFacet(this.ObjectRef);
-      this.isActive = true;
-    }
+    #endregion
+
+    #region Facet Members
 
     /// <summary>
-    /// Desativa a faceta.
+    /// Fornece a descrição da faceta.
     /// </summary>
-    public void Deactivate() {
-      IiopNetUtil.DeactivateFacet(this.ObjectRef);
-      this.isActive = false;
+    /// <returns>A descrição da faceta.</returns>
+    public FacetDescription GetDescription() {
+      return new FacetDescription(name, interfaceName, reference);
     }
 
     #endregion

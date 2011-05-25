@@ -23,10 +23,10 @@ namespace Scs.Core
     /// <summary>
     /// Interface que o receptáculo permite conexão.
     /// </summary>
-    public string RepositoryId {
-      get { return repositoryId; }
+    public string InterfaceName {
+      get { return interfaceName; }
     }
-    private string repositoryId;
+    private string interfaceName;
 
     /// <summary>
     /// Indica se o receptáculo aceita múltiplas conexões.
@@ -54,11 +54,11 @@ namespace Scs.Core
     /// Contrutor.
     /// </summary>
     /// <param name="name">O nome do receptáculo.</param>
-    /// <param name="repositoryId">O tipo do receptáculo (RepositoryID).</param>
+    /// <param name="interfaceName">O tipo do receptáculo (RepositoryID).</param>
     /// <param name="isMultiple">Infomra se o receptáculo é múltiplo.</param>
     public Receptacle(string name, string repositoryId, bool isMultiple) {
       this.name = name;
-      this.repositoryId = repositoryId;
+      this.interfaceName = repositoryId;
       this.isMultiple = isMultiple;
       this.connections = new Dictionary<Int32, MarshalByRefObject>();
     }
@@ -66,6 +66,15 @@ namespace Scs.Core
     #endregion
 
     #region Public Members
+
+    /// <summary>
+    /// Fornece a descrição do receptáculo.
+    /// </summary>
+    /// <returns>A descrição do receptáculo.</returns>
+    public ReceptacleDescription GetDescription() {
+      ConnectionDescription[] connection = GetConnections().ToArray();
+      return new ReceptacleDescription(name, interfaceName, isMultiple, connection);
+    }
 
     /// <summary>
     /// Adiciona uma conexão.
@@ -100,7 +109,7 @@ namespace Scs.Core
     /// </summary>
     /// <returns>A lista de conexões do receptáculo.</returns>
     public List<ConnectionDescription> GetConnections() {
-      List<ConnectionDescription> connectionList = 
+      List<ConnectionDescription> connectionList =
           new List<ConnectionDescription>();
 
       foreach (var connetion in this.connections) {
@@ -129,6 +138,13 @@ namespace Scs.Core
     /// <returns>A quantidade das conexões.</returns>
     public int GetConnectionsSize() {
       return this.connections.Count;
+    }
+
+    /// <summary>
+    /// Remove todas as conexões.
+    /// </summary>
+    public void ClearConnections() {
+      connections.Clear();
     }
 
     #endregion

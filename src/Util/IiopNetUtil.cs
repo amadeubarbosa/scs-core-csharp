@@ -12,7 +12,7 @@ namespace Scs.Core.Util
     /// Verifica se o objeto CORBA implementa a interface (repository ID).
     /// </summary>
     /// <param name="obj">O objeto CORBA.</param>
-    /// <param name="repositoryId">A interface (repository ID).</param>
+    /// <param name="interfaceName">A interface (repository ID).</param>
     /// <returns></returns>
     public static bool CheckInterface(MarshalByRefObject obj, string repositoryId) {
       OrbServices orb = OrbServices.GetSingleton();
@@ -52,6 +52,16 @@ namespace Scs.Core.Util
     /// <exception cref="System.Runtime.Remoting.RemotingException"></exception>
     public static ObjRef ActivateFacet(MarshalByRefObject facetObj) {
       return RemotingServices.Marshal(facetObj);
+    }
+
+    /// <summary>
+    /// Permite que a faceta seja vista remotamente utilizando um identificador.
+    /// </summary>
+    /// <param name="facetObj">A faceta.</param>
+    /// <param name="id">O nome identificador da faceta.</param>
+    /// <returns>Referência para o objeto remoto.</returns>
+    public static ObjRef ActivateFacet(MarshalByRefObject facetObj, String id) {
+      return RemotingServices.Marshal(facetObj, id);
     }
 
     /// <summary>

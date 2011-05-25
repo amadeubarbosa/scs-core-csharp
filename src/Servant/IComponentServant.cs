@@ -54,8 +54,8 @@ namespace Scs.Core.Servant
       IDictionary<String, Facet> facets = this.context.GetFacets();
 
       foreach (Facet facet in facets.Values) {
-        if (facet.RepositoryId == facet_interface)
-          return facet.ObjectRef;
+        if (facet.InterfaceName == facet_interface)
+          return facet.Reference;
       }
       return null;
     }
@@ -63,12 +63,14 @@ namespace Scs.Core.Servant
     /// <summary>
     /// Obtém a faceta do componente através do nome da faceta.
     /// </summary>
-    /// <param name="facet">Nome da faceta que se deseja obter.</param>
+    /// <param name="facetName">Nome da faceta que se deseja obter.</param>
     /// <returns>Referência para a faceta do componente.</returns>
-    public MarshalByRefObject getFacetByName(string facet) {
-      IDictionary<String, Facet> facets = this.context.GetFacets();
-
-      return facets[facet].ObjectRef;
+    public MarshalByRefObject getFacetByName(string facetName) {
+      Facet facet = context.GetFacetByName(facetName);
+      if (facet == null) {
+        return null;
+      }
+      return facet.Reference;
     }
 
     /// <summary>

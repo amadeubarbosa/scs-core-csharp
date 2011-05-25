@@ -118,7 +118,7 @@ namespace Scs.Core.Servant
 
       foreach (Facet facet in facets.Values) {
         facetDesc[counter++] = new FacetDescription(facet.Name,
-          facet.RepositoryId, facet.ObjectRef);
+          facet.InterfaceName, facet.Reference);
       }
       return facetDesc;
     }
@@ -136,7 +136,7 @@ namespace Scs.Core.Servant
 
       foreach (Receptacle recep in receptacles.Values) {
         receptacleDesc[counter++] = new ReceptacleDescription(recep.Name,
-            recep.RepositoryId, recep.IsMultiple, 
+            recep.InterfaceName, recep.IsMultiple, 
             recep.GetConnections().ToArray());
       }
       return receptacleDesc;

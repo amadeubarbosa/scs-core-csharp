@@ -59,19 +59,16 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="src\ComponentBuilder.cs" />
+    <Compile Include="src\Builder\XmlComponentBuilder.cs" />
     <Compile Include="src\ComponentContext.cs" />
     <Compile Include="src\DefaultComponentContext.cs" />
     <Compile Include="src\Exception\SCSException.cs" />
     <Compile Include="src\Facet.cs" />
-    <Compile Include="src\FacetInformation.cs" />
     <Compile Include="src\Receptacle.cs" />
-    <Compile Include="src\ReceptacleInformation.cs" />
     <Compile Include="src\Servant\IComponentServant.cs" />
     <Compile Include="src\Servant\IMetaInterfaceServant.cs" />
     <Compile Include="src\Servant\IReceptaclesServant.cs" />
     <Compile Include="src\Util\IiopNetUtil.cs" />
-    <Compile Include="src\Util\XmlComponentParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\schema\trunk\ComponentDescription.xsd">
