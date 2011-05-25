@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Remoting.Channels;
 using Ch.Elca.Iiop;
@@ -21,20 +20,15 @@ namespace Server
       IiopChannel chan = new IiopChannel(0);
       ChannelServices.RegisterChannel(chan, false);
 
-      ComponentBuilder builder = new ComponentBuilder();
+      ComponentId pongComponentId = new ComponentId("PingPong", 1, 0, 0, "");
+      ComponentContext pongContext = new DefaultComponentContext(pongComponentId);
 
-      Type pongType = typeof(PongServant);
+      MarshalByRefObject pongServant = new PongServant(pongContext);
       string pingpongRepID = Repository.GetRepositoryID(typeof(PingPongServer));
 
-      //Criando o component Pong.      
-      List<FacetInformation> pongFacets = new List<FacetInformation>();
-      pongFacets.Add(new FacetInformation("Pong", pingpongRepID, pongType));
-
-      List<ReceptacleInformation> pongReceptacles = new List<ReceptacleInformation>();
-      pongReceptacles.Add(new ReceptacleInformation("PingRec", pingpongRepID, false));
-
-      ComponentId pongComponentId = new ComponentId("PingPong", 1, 0, 0, "");
-      ComponentContext pongContext = builder.NewComponent(pongFacets, pongReceptacles, pongComponentId);
+      //Criando o component Pong.
+      pongContext.PutFacet("Pong", pingpongRepID, pongServant);
+      pongContext.PutReceptacles("PingRec", pingpongRepID, false);
 
       String pingIorPath = Pong.Properties.Resources.IorFilename;
       StreamReader stream = new StreamReader(pingIorPath);
@@ -75,11 +69,11 @@ namespace Server
       pongServer.pong();
       Console.WriteLine("--\n");
 
-      MarshalByRefObject faceta = pingComponent.getFacetByName("IMetaInterface");
-      IMetaInterface pingMetaInterface = faceta as IMetaInterface;
-      FacetDescription[] getFacets1 = pingMetaInterface.getFacets();
-      foreach (var f in getFacets1) {
-        Console.WriteLine(f.name + " --- " + f.interface_name);
+      MarshalByRefObject pingMetaInterfaceObj = pingComponent.getFacetByName("IMetaInterface");
+      IMetaInterface pingMetaInterface = pingMetaInterfaceObj as IMetaInterface;
+      FacetDescription[] PingFacets = pingMetaInterface.getFacets();
+      foreach (var facet in PingFacets) {
+        Console.WriteLine(facet.name + " --- " + facet.interface_name);
       }
 
       Console.WriteLine("Fim");

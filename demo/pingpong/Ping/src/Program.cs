@@ -1,13 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.Remoting.Channels;
-using System.Threading;
 using System.Xml;
 using Ch.Elca.Iiop;
 using omg.org.CORBA;
 using Ping.Properties;
 using scs.core;
 using Scs.Core;
+using Scs.Core.Builder;
 
 namespace Server
 {
@@ -18,11 +18,11 @@ namespace Server
       IiopChannel chan = new IiopChannel(0);
       ChannelServices.RegisterChannel(chan, false);
 
-      ComponentBuilder builder = new ComponentBuilder();
       String componentModel = Resources.ComponentDesc;
       TextReader file = new StringReader(componentModel);
       XmlTextReader componentInformation = new XmlTextReader(file);
-      ComponentContext pingContext = builder.NewComponent(componentInformation);
+      XMLComponentBuilder builder = new XMLComponentBuilder(componentInformation);
+      ComponentContext pingContext = builder.build();
 
       //Escrevendo a IOR do IComponent no arquivo.
       IComponent pingComponent = pingContext.GetIComponent();
@@ -39,7 +39,7 @@ namespace Server
       }
 
       Console.WriteLine("Componente ping está no ar.");
-      Thread.Sleep(Timeout.Infinite);
+      Console.ReadLine();
     }
   }
 }
