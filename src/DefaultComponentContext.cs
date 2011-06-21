@@ -4,6 +4,7 @@ using System.Runtime.Remoting;
 using scs.core;
 using Scs.Core.Servant;
 using Scs.Core.Util;
+using System.Text.RegularExpressions;
 
 namespace Scs.Core
 {
@@ -58,18 +59,17 @@ namespace Scs.Core
 
     /// <see cref="PutFacet" />
     public void PutFacet(String name, String interfaceName, MarshalByRefObject servant) {
-      IiopNetUtil.ActivateFacet(servant);
       Facet facet = new Facet(name, interfaceName, servant);
       if (facets.ContainsKey(name)) {
         IiopNetUtil.DeactivateFacet(facets[name].Reference);
       }
       facets[name] = facet;
-      ObjRef activateFacet = IiopNetUtil.ActivateFacet(facet.Reference);
+      ObjRef activateFacet = IiopNetUtil.ActivateFacet(servant);
     }
 
     /// <see cref="RemoveFacet" />
     public void RemoveFacet(String name) {
-      if (facets.ContainsKey(name)) {
+      if (!facets.ContainsKey(name)) {
         return;
       }
       MarshalByRefObject facetObj = facets[name].Reference;
@@ -77,16 +77,16 @@ namespace Scs.Core
       facets.Remove(name);
     }
 
-    /// <see cref="PutReceptacles" />
-    public void PutReceptacles(String name, String interfaceName, Boolean isMultiple) {
+    /// <see cref="PutReceptacle" />
+    public void PutReceptacle(String name, String interfaceName, Boolean isMultiple) {
       Receptacle receptacle = new Receptacle(name, interfaceName, isMultiple);
       receptacles[name] = receptacle;
     }
 
     /// <see cref="RemoveReceptacles" />
     public void RemoveReceptacles(String name) {
-      if (facets.ContainsKey(name)) {
-        facets.Remove(name);
+      if (receptacles.ContainsKey(name)) {
+        receptacles.Remove(name);
       }
     }
 
@@ -94,7 +94,7 @@ namespace Scs.Core
     public IComponent GetIComponent() {
       string iComponentName = typeof(IComponent).Name;
       if (!facets.ContainsKey(iComponentName)) {
-        return null;  
+        return null;
       }
       return facets[iComponentName].Reference as IComponent;
     }
@@ -106,16 +106,22 @@ namespace Scs.Core
 
     /// <see cref="GetFacetByName" />
     public Facet GetFacetByName(String name) {
+      if (!facets.ContainsKey(name)) {
+        return null;
+      }
       return facets[name];
     }
 
     /// <see cref="GetReceptacles" />
     public IDictionary<String, Receptacle> GetReceptacles() {
-      return new Dictionary<String, Receptacle>(receptacles);      
+      return new Dictionary<String, Receptacle>(receptacles);
     }
 
     /// <see cref="GetReceptacleByName" />    
     public Receptacle GetReceptacleByName(String name) {
+      if (!receptacles.ContainsKey(name)) {
+        return null;
+      }
       return receptacles[name];
     }
 
@@ -143,32 +149,31 @@ namespace Scs.Core
     /// Adiciona as facetas bÃ¡sicas Ã  lista de Facetas criadas pelo usuÃ¡rio.
     /// </summary>
     private void AddBasicFacets() {
-
       Type icomponentType = typeof(IComponent);
-      string icomponentName = icomponentType.Name;      
-      string icomponentInterfaceName = IiopNetUtil.GetRepositoryId(icomponentType);      
+      string icomponentName = icomponentType.Name;
+      string icomponentInterfaceName = IiopNetUtil.GetRepositoryId(icomponentType);
       if (!facets.ContainsKey(icomponentName)) {
         IComponent icomponent = new IComponentServant(this);
         MarshalByRefObject icomponentServant = icomponent as MarshalByRefObject;
         PutFacet(icomponentName, icomponentInterfaceName, icomponentServant);
       }
 
-      Type receptacleType = typeof(IReceptacles);
-      string receptacleName = receptacleType.Name;
-      string receptacleInterfaceName = IiopNetUtil.GetRepositoryId(receptacleType);      
-      if (!facets.ContainsKey(receptacleName)) {
+      Type ireceptacleType = typeof(IReceptacles);
+      string ireceptacleName = ireceptacleType.Name;
+      string ireceptacleInterfaceName = IiopNetUtil.GetRepositoryId(ireceptacleType);
+      if (!facets.ContainsKey(ireceptacleName)) {
         IReceptacles receptacle = new IReceptaclesServant(this);
         MarshalByRefObject receptacleServant = receptacle as MarshalByRefObject;
-        PutFacet(receptacleName, receptacleInterfaceName, receptacleServant);
+        PutFacet(ireceptacleName, ireceptacleInterfaceName, receptacleServant);
       }
 
-      Type metaInterfaceType = typeof(IMetaInterface);
-      string metaInterfaceName = metaInterfaceType.Name;
-      string metaInterfaceInterfaceName = IiopNetUtil.GetRepositoryId(metaInterfaceType);      
-      if (!facets.ContainsKey(metaInterfaceName)) {
+      Type imetaInterfaceType = typeof(IMetaInterface);
+      string imetaInterfaceName = imetaInterfaceType.Name;
+      string imetaInterfaceInterfaceName = IiopNetUtil.GetRepositoryId(imetaInterfaceType);
+      if (!facets.ContainsKey(imetaInterfaceName)) {
         IMetaInterface metaInterface = new IMetaInterfaceServant(this);
         MarshalByRefObject metaInterfaceServant = metaInterface as MarshalByRefObject;
-        PutFacet(metaInterfaceName, metaInterfaceInterfaceName, metaInterfaceServant);
+        PutFacet(imetaInterfaceName, imetaInterfaceInterfaceName, metaInterfaceServant);
       }
     }
 

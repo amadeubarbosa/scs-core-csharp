@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using scs.core;
+using System.Text.RegularExpressions;
 
 namespace Scs.Core
 {
@@ -57,6 +58,13 @@ namespace Scs.Core
     /// <param name="interfaceName">O tipo do receptáculo (RepositoryID).</param>
     /// <param name="isMultiple">Infomra se o receptáculo é múltiplo.</param>
     public Receptacle(string name, string interfaceName, bool isMultiple) {
+      if (String.IsNullOrEmpty(name))
+        throw new ArgumentException("name is null or empty.", "name");
+      if (String.IsNullOrEmpty(interfaceName))
+        throw new ArgumentException("interfaceName is null or empty.", "interfaceName");
+      if (!checkInterface(interfaceName))
+        throw new ArgumentException("O campo 'interfaceName' não está de acordo com o padrão");
+
       this.name = name;
       this.interfaceName = interfaceName;
       this.isMultiple = isMultiple;
@@ -79,17 +87,17 @@ namespace Scs.Core
     /// <summary>
     /// Adiciona uma conexão.
     /// </summary>
-    /// <param name="obj">Objeto CORBA do provedor de serviço.</param>
+    /// <param name="connection">Objeto CORBA do provedor de serviço.</param>
     /// <returns>
     /// Retorna o identificador caso o objeto tenha sido adicionado, ou -1 caso
     /// contrário.
     /// </returns>
-    public int AddConnections(MarshalByRefObject obj) {
-      if (obj == null)
+    internal int AddConnections(MarshalByRefObject connection) {
+      if (connection == null)
         return -1;
 
       int id = Interlocked.Increment(ref Receptacle.connectionId);
-      this.connections.Add(id, obj);
+      this.connections.Add(id, connection);
       return id;
     }
 
@@ -100,7 +108,7 @@ namespace Scs.Core
     /// <returns>
     /// <c>True</c> tenha removido com sucesso. <c>False</c> caso contrário.
     /// </returns>
-    public bool RemoveConnetions(int id) {
+    internal bool RemoveConnetions(int id) {
       return this.connections.Remove(id);
     }
 
@@ -108,7 +116,7 @@ namespace Scs.Core
     /// Fornece todas as conexões.
     /// </summary>
     /// <returns>A lista de conexões do receptáculo.</returns>
-    public List<ConnectionDescription> GetConnections() {
+    internal List<ConnectionDescription> GetConnections() {
       List<ConnectionDescription> connectionList =
           new List<ConnectionDescription>();
 
@@ -117,19 +125,6 @@ namespace Scs.Core
             new ConnectionDescription(connetion.Key, connetion.Value));
       }
       return connectionList;
-    }
-
-    /// <summary>
-    /// Fornece a conexão desejada.
-    /// </summary>
-    /// <param name="id">O identificador da conexão.</param>    
-    /// <returns>A conexão desejada.</returns>
-    public ConnectionDescription GetConnection(int id) {
-      MarshalByRefObject obj = this.connections[id];
-      if (obj == null)
-        throw new KeyNotFoundException();
-
-      return new ConnectionDescription(id, obj);
     }
 
     /// <summary>
@@ -143,10 +138,52 @@ namespace Scs.Core
     /// <summary>
     /// Remove todas as conexões.
     /// </summary>
-    public void ClearConnections() {
+    internal void ClearConnections() {
       connections.Clear();
     }
 
     #endregion
+
+    #region Private Methods
+
+
+    /// <summary>
+    /// Verifica se a interface equivale a um RepositoryId
+    /// </summary>
+    /// <param name="interfaceName">A interface</param>
+    /// <returns></returns>
+    private bool checkInterface(string interfaceName) {
+      Regex repositoryIDMacher = new Regex(@"^IDL:[\w/]+:\d+.\d+$");
+      return repositoryIDMacher.IsMatch(interfaceName);
+    }
+
+    #endregion
+
+    #region Override Methods
+
+    /// <see cref="Equals" />
+    public override bool Equals(object obj) {
+      if (obj == null || GetType() != obj.GetType()) {
+        return false;
+      }
+      Receptacle receptacle = (Receptacle)obj;
+
+      if (this.name != receptacle.name)
+        return false;
+      if (this.interfaceName != receptacle.interfaceName)
+        return false;
+      if (this.isMultiple != receptacle.isMultiple)
+        return false;
+      return true;
+    }
+
+    /// <see cref="GetHashCode" />
+    public override int GetHashCode() {
+      return unchecked(name.GetHashCode() + interfaceName.GetHashCode());
+    }
+
+    #endregion
+
+
   }
 }

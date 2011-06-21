@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Scs.Core.Util;
-using scs.core;
-using Scs.Core.Servant;
-using Scs.Core;
 using Ch.Elca.Iiop.Idl;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using scs.core;
+using Scs.Core;
+using Scs.Core.Servant;
+using Scs.Core.Util;
 
 namespace Test
 {
@@ -18,10 +15,10 @@ namespace Test
   public class IiopNetUtilTest
   {
     private TestContext testContextInstance;
-    private ComponentId componentId;
-    private ComponentContext componentContext;
-    private IComponent icomponetFacet;
-    private Type icomponentType;
+    private static ComponentId componentId;
+    private static ComponentContext componentContext;
+    private static IComponent icomponetFacet;
+    private static Type icomponentType;
 
     /// <summary>
     ///Gets or sets the test componentContext which provides
@@ -36,11 +33,12 @@ namespace Test
       }
     }
 
-    public IiopNetUtilTest() {
-      this.componentId = new ComponentId("Component1", 1, 0, 0, "none");
-      this.componentContext = new DefaultComponentContext(componentId);
-      this.icomponetFacet = new IComponentServant(componentContext);
-      this.icomponentType = typeof(IComponent);
+    [ClassInitialize()]
+    public static void BeforeClass(TestContext testContext) {
+      componentId = new ComponentId("Component1", 1, 0, 0, "none");
+      componentContext = new DefaultComponentContext(componentId);
+      icomponetFacet = new IComponentServant(componentContext);
+      icomponentType = typeof(IComponent);
     }
 
     ///<summary>    
@@ -48,7 +46,7 @@ namespace Test
     ///</summary>
     [TestMethod]
     public void CheckInterface1() {
-      MarshalByRefObject icomponentObj = this.icomponetFacet as MarshalByRefObject;
+      MarshalByRefObject icomponentObj = icomponetFacet as MarshalByRefObject;
       string repositoryId = Repository.GetRepositoryID(icomponentType);
       bool expected = true;
       bool actual = IiopNetUtil.CheckInterface(icomponentObj, repositoryId);
@@ -60,7 +58,7 @@ namespace Test
     ///</summary>
     [TestMethod]
     public void CheckInterface2() {
-      MarshalByRefObject icomponentObj = this.icomponetFacet as MarshalByRefObject;
+      MarshalByRefObject icomponentObj = icomponetFacet as MarshalByRefObject;
       Type imetaInterfaceType = typeof(IMetaInterface);
       string repositoryId = Repository.GetRepositoryID(imetaInterfaceType);
       bool expected = false;
@@ -73,7 +71,7 @@ namespace Test
     ///</summary>
     [TestMethod]
     public void CheckInterfaceTest3() {
-      MarshalByRefObject icomponentObj = this.icomponetFacet as MarshalByRefObject;
+      MarshalByRefObject icomponentObj = icomponetFacet as MarshalByRefObject;
       string repositoryId = "1.0:openbus/null:IDL";
       bool expected = false;
       bool actual = IiopNetUtil.CheckInterface(icomponentObj, repositoryId);
@@ -85,7 +83,7 @@ namespace Test
     ///</summary>
     [TestMethod]
     public void CheckInterfaceTest4() {
-      MarshalByRefObject icomponentObj = this.icomponetFacet as MarshalByRefObject;
+      MarshalByRefObject icomponentObj = icomponetFacet as MarshalByRefObject;
       Type type = icomponentType;
       bool expected = true;
       bool actual = IiopNetUtil.CheckInterface(icomponentObj, type);
@@ -97,7 +95,7 @@ namespace Test
     ///</summary>
     [TestMethod]
     public void CheckInterfaceTest5() {
-      MarshalByRefObject icomponentObj = this.icomponetFacet as MarshalByRefObject;
+      MarshalByRefObject icomponentObj = icomponetFacet as MarshalByRefObject;
       Type type = typeof(IMetaInterface);
       bool expected = false;
       bool actual = IiopNetUtil.CheckInterface(icomponentObj, type);
@@ -109,7 +107,7 @@ namespace Test
     ///</summary>
     [TestMethod]
     public void CheckInterfaceTest6() {
-      MarshalByRefObject icomponentObj = this.icomponetFacet as MarshalByRefObject;
+      MarshalByRefObject icomponentObj = icomponetFacet as MarshalByRefObject;
       Type type = typeof(Nullable);
       bool expected = false;
       bool actual = IiopNetUtil.CheckInterface(icomponentObj, type);

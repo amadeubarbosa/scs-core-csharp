@@ -89,11 +89,15 @@ namespace Scs.Core.Servant
       if (id < 0)
         throw new InvalidConnection();
 
-      Receptacle receptacle = FindReceptacle(id);
-      if (receptacle == null)
-        throw new NoConnection();
+      IDictionary<String, Receptacle> receptacles = context.GetReceptacles();
+      foreach (Receptacle receptacle in receptacles.Values) {
+        Boolean removed = receptacle.RemoveConnetions(id);
+        if (removed) {
+          return;
+        }
+      }
 
-      receptacle.RemoveConnetions(id);
+      throw new NoConnection();
     }
 
     /// <summary>
@@ -112,26 +116,5 @@ namespace Scs.Core.Servant
     }
 
     #endregion
-
-    #region Private Members
-
-    /// <summary>
-    /// Busca um receptáculo a partir de um identificador.
-    /// </summary>
-    /// <param name="id">A indentificação da conexão.</param>
-    /// <returns>O receptáculo.</returns>    
-    private Receptacle FindReceptacle(int id) {
-      IDictionary<string, Receptacle> receptacles = context.GetReceptacles();
-      foreach (Receptacle receptacle in receptacles.Values) {
-        try {
-          receptacle.GetConnection(id);
-          return receptacle;
-        }
-        catch (KeyNotFoundException) { }
-      }
-      return null;
-    }
-
-   #endregion
   }
 }

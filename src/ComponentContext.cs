@@ -28,8 +28,8 @@ namespace Scs.Core
     IComponent GetIComponent();
 
     /// <summary>
-    /// Fornece a coleção de faceta. Onde a chave é o nome da faceta e o valor
-    /// é a própria faceta.
+    /// Fornece uma cópia da coleção de faceta. Onde a chave é o nome da 
+    /// faceta e o valor é a própria faceta.
     /// </summary>
     /// <returns>A coleção de facetas.</returns>
     IDictionary<String, Facet> GetFacets();
@@ -42,8 +42,8 @@ namespace Scs.Core
     Facet GetFacetByName(String name);
 
     /// <summary>
-    /// Fornece a coleção de receptáculos. Onde a chave é o nome do receptáculo
-    /// e o valor é o próprio receptáculo.
+    /// Fornece uma cópia da coleção de receptáculos. Onde a chave é o nome do 
+    /// receptáculo e o valor é o próprio receptáculo.
     /// </summary>
     /// <returns>A coleção de receptáculos.</returns>
     IDictionary<String, Receptacle> GetReceptacles();
@@ -82,7 +82,7 @@ namespace Scs.Core
     /// <param name="interfaceName">Inteface que o receptáculo permite conexão.</param>
     /// <param name="isMultiple"><code>True</code> caso o recepátulo aceitar 
     /// múltiplas conexões, <code>false</code> caso contrário.</param>
-    void PutReceptacles(String name, String interfaceName, Boolean isMultiple);
+    void PutReceptacle(String name, String interfaceName, Boolean isMultiple);
 
     /// <summary>
     /// Remove o receptáculo do componente.

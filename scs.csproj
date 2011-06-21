@@ -34,6 +34,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>doc\Scs-doc.XML</DocumentationFile>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="IIOPChannel, Version=1.9.1.0, Culture=neutral, PublicKeyToken=86d952ca8b69eded, processorArchitecture=MSIL">

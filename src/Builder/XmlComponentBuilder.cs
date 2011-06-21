@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Schema;
 using scs.core;
 using Scs.Core.Exception;
 using Scs.Core.Properties;
 using Scs.Core.Util;
-using System.Reflection;
 
 namespace Scs.Core.Builder
 {
@@ -200,7 +199,7 @@ namespace Scs.Core.Builder
         Boolean isMultiple =
             XmlConvert.ToBoolean(receptacleNode[RECEPTACLE_MULTIPLE].InnerText);
 
-        context.PutReceptacles(name, interfaceName, isMultiple);
+        context.PutReceptacle(name, interfaceName, isMultiple);
       }
     }
 
@@ -221,6 +220,11 @@ namespace Scs.Core.Builder
         string errorMsg = String.Format("Não foi possível criar uma faceta do tipo {0}. Tipo não encontrado",
             type);
         throw new SCSException(errorMsg, e);
+      }
+      if (facetType == null) {
+        string errorMsg = String.Format("Não foi possível criar uma faceta do tipo {0}. Tipo não encontrado",
+            type);
+        throw new SCSException(errorMsg);
       }
 
       ConstructorInfo constructor = facetType.GetConstructor(

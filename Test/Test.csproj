@@ -50,8 +50,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultComponentContextTest.cs" />
+    <Compile Include="FacetTest.cs" />
+    <Compile Include="Mock\MockComponentContext2.cs" />
+    <Compile Include="Mock\MockComponentContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IiopNetUtilTest.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ReceptacleTest.cs" />
+    <Compile Include="XMLComponentBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Scs.csproj">
@@ -63,6 +74,26 @@
     <None Include="..\ScsKey.snk">
       <Link>ScsKey.snk</Link>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Models\Component2.xml">
+    </Content>
+    <Content Include="Models\Component1.xml" />
+    <Content Include="Models\Component3.xml" />
+    <Content Include="Models\Component4.xml" />
+    <Content Include="Models\Component5.xml" />
+    <Content Include="Models\Component6.xml" />
+    <Content Include="Models\Component7.xml" />
+    <Content Include="Models\Component8.xml" />
+    <Content Include="Models\Component9.xml" />
+    <Content Include="Models\Component10.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
