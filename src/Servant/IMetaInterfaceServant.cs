@@ -29,6 +29,8 @@ namespace Scs.Core.Servant
     /// </summary>
     /// <param name="context">O contexto do Componente.</param>
     public IMetaInterfaceServant(ComponentContext context) {
+      if (context == null)
+        throw new ArgumentNullException("context", "context is null.");
       this.context = context;
     }
 
@@ -57,7 +59,6 @@ namespace Scs.Core.Servant
     /// </exception>
     public FacetDescription[] getFacetsByName(string[] names) {
       IDictionary<String, Facet> facets = this.context.GetFacets();
-      // IDictionary<String, Facet> selectedFacets =
 
       var filteredFacets =
           from facet in facets
@@ -65,8 +66,7 @@ namespace Scs.Core.Servant
           select facet;
 
       IDictionary<String, Facet> selectedFacets =
-          filteredFacets as IDictionary<String, Facet>;
-
+        filteredFacets.ToDictionary(k => k.Key, c => c.Value);
       return CreateFacetDescriptionVector(selectedFacets);
     }
 
@@ -93,12 +93,11 @@ namespace Scs.Core.Servant
 
       var filteredReceptacles =
           from receptacle in receptacles
-          where names.Contains(receptacle.Value.Name.Trim())
+          where names.Contains(receptacle.Value.Name)
           select receptacle;
 
       IDictionary<String, Receptacle> selectedReceptacles =
-          filteredReceptacles as IDictionary<String, Receptacle>;
-
+        filteredReceptacles.ToDictionary(k => k.Key, c => c.Value);
       return CreateReceptacleDescriptionVector(selectedReceptacles);
     }
 
@@ -136,7 +135,7 @@ namespace Scs.Core.Servant
 
       foreach (Receptacle recep in receptacles.Values) {
         receptacleDesc[counter++] = new ReceptacleDescription(recep.Name,
-            recep.InterfaceName, recep.IsMultiple, 
+            recep.InterfaceName, recep.IsMultiple,
             recep.GetConnections().ToArray());
       }
       return receptacleDesc;

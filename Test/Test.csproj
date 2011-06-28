@@ -52,6 +52,9 @@
   <ItemGroup>
     <Compile Include="DefaultComponentContextTest.cs" />
     <Compile Include="FacetTest.cs" />
+    <Compile Include="IComponentServantTest.cs" />
+    <Compile Include="IMetaInterfaceServantTest.cs" />
+    <Compile Include="IReceptaclesServantTest.cs" />
     <Compile Include="Mock\MockComponentContext2.cs" />
     <Compile Include="Mock\MockComponentContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

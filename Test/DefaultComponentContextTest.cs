@@ -16,9 +16,9 @@ namespace Test
   {
     private TestContext testContextInstance;
     private static ComponentId componentId;
-    private static ComponentContext context;
-    private static List<FacetInformation> facetList;
-    private static List<ReceptacleInfomation> receptacleList;
+    private ComponentContext context;
+    private List<FacetInformation> facetList;
+    private List<ReceptacleInfomation> receptacleList;
 
     public TestContext TestContext {
       get {
@@ -32,12 +32,19 @@ namespace Test
     [ClassInitialize()]
     public static void BeforeClass(TestContext testContext) {
       componentId = new ComponentId("Component1", 1, 0, 0, "none");
+   
+    }
+
+    [TestInitialize()]
+    public void BeforeTest() {
+      context = new DefaultComponentContext(componentId);
+
       Type icomponentType = typeof(IComponent);
       Type ireceptacleType = typeof(IReceptacles);
       Type imetaInterfaceType = typeof(IMetaInterface);
       String icomponentInterfaceName = Repository.GetRepositoryID(icomponentType);
       string ireceptacleInterfaceName = Repository.GetRepositoryID(ireceptacleType);
-      string imetaInterfaceInterfaceName = Repository.GetRepositoryID(imetaInterfaceType);
+      string imetaInterfaceInterfaceName = Repository.GetRepositoryID(imetaInterfaceType);   
       facetList = new List<FacetInformation>();
       facetList.Add(new FacetInformation(
           "Faceta3", icomponentInterfaceName, new IComponentServant(context)));
@@ -55,11 +62,6 @@ namespace Test
           "IReceptacleReceptacle", ireceptacleInterfaceName, false));
       receptacleList.Add(new ReceptacleInfomation(
           "IMetaInterfaceReceptacle", imetaInterfaceInterfaceName, false));
-    }
-
-    [TestInitialize()]
-    public void BeforeTest() {
-      context = new DefaultComponentContext(componentId);
     }
 
     /// <summary>
@@ -119,6 +121,12 @@ namespace Test
     public void GetFacetByNameTest2() {
       string name = "InvalidFacet";
       Facet actual = context.GetFacetByName(name);
+      Assert.IsNull(actual);
+    }
+
+    [TestMethod]
+    public void GetFacetByNameTest3() {      
+      Facet actual = context.GetFacetByName(null);
       Assert.IsNull(actual);
     }
 
@@ -336,7 +344,7 @@ namespace Test
       actual = context.GetReceptacleByName(recInfo.name);
       Assert.IsNotNull(actual);
 
-      context.RemoveReceptacles(recInfo.name);
+      context.RemoveReceptacle(recInfo.name);
       actual = context.GetReceptacleByName(recInfo.name);
       Assert.IsNull(actual);
     }
@@ -374,6 +382,12 @@ namespace Test
     public void GetReceptacleByNameTest2() {
       string name = "InvalidReceptacle";
       Receptacle actual = context.GetReceptacleByName(name);
+      Assert.IsNull(actual);
+    }
+
+    [TestMethod()]
+    public void GetReceptacleByNameTest3() {      
+      Receptacle actual = context.GetReceptacleByName(null);
       Assert.IsNull(actual);
     }
 

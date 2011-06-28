@@ -28,6 +28,8 @@ namespace Scs.Core.Servant
     /// </summary>
     /// <param name="context">O contexto do Componente.</param>
     public IComponentServant(ComponentContext context) {
+      if (context == null)
+        throw new ArgumentNullException("context", "context is null.");
       this.context = context;
     }
 
@@ -52,7 +54,6 @@ namespace Scs.Core.Servant
     /// <returns>Referência para a faceta do componente.</returns>
     public MarshalByRefObject getFacet(string facet_interface) {
       IDictionary<String, Facet> facets = this.context.GetFacets();
-
       foreach (Facet facet in facets.Values) {
         if (facet.InterfaceName == facet_interface)
           return facet.Reference;

@@ -50,7 +50,7 @@ namespace Test.Mock
       throw new NotImplementedException();
     }
 
-    public void RemoveReceptacles(string name) {
+    public void RemoveReceptacle(string name) {
       throw new NotImplementedException();
     }
 

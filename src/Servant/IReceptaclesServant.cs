@@ -29,6 +29,8 @@ namespace Scs.Core.Servant
     /// </summary>
     /// <param name="context">O contexto do Componente.</param>
     public IReceptaclesServant(ComponentContext context) {
+      if (context == null)
+        throw new ArgumentNullException("context", "context is null.");
       this.context = context;
     }
 
@@ -61,10 +63,10 @@ namespace Scs.Core.Servant
     public int connect(string receptacle, MarshalByRefObject obj) {
       IDictionary<string, Receptacle> receptacles =
           this.context.GetReceptacles();
-      Receptacle rec = receptacles[receptacle];
-      if (rec == null)
+      if (!receptacles.ContainsKey(receptacle))
         throw new InvalidName();
 
+      Receptacle rec = receptacles[receptacle];
       if ((!rec.IsMultiple) &&
           (rec.GetConnectionsSize() > 0))
         throw new AlreadyConnected();
@@ -96,7 +98,6 @@ namespace Scs.Core.Servant
           return;
         }
       }
-
       throw new NoConnection();
     }
 
@@ -108,10 +109,10 @@ namespace Scs.Core.Servant
     /// <exception cref="InvalidName">Caso um nome seja inválido.</exception>
     public ConnectionDescription[] getConnections(string receptacle) {
       IDictionary<string, Receptacle> receptacles = context.GetReceptacles();
-      Receptacle rec = receptacles[receptacle];
-      if (rec == null)
+      if (!receptacles.ContainsKey(receptacle))
         throw new InvalidName();
 
+      Receptacle rec = receptacles[receptacle];
       return rec.GetConnections().ToArray();
     }
 

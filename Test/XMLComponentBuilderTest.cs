@@ -142,8 +142,6 @@ namespace Test
       XmlTextReader componentInformation = new XmlTextReader(file);
       XMLComponentBuilder builder = new XMLComponentBuilder(componentInformation);
       ComponentContext target = builder.build();
-
-      Assert.Fail();
     }
 
     [TestMethod]
@@ -155,7 +153,6 @@ namespace Test
       XMLComponentBuilder target = new XMLComponentBuilder(componentInformation);
 
       ComponentContext actual = target.build();
-      Assert.Fail();
     }
 
     [TestMethod]
@@ -167,7 +164,6 @@ namespace Test
       XMLComponentBuilder target = new XMLComponentBuilder(componentInformation);
 
       ComponentContext actual = target.build();
-      Assert.Fail();
     }
 
     [TestMethod]
@@ -179,7 +175,6 @@ namespace Test
       XMLComponentBuilder target = new XMLComponentBuilder(componentInformation);
 
       ComponentContext actual = target.build();
-      Assert.Fail();
     }
 
     [TestMethod]
@@ -191,7 +186,6 @@ namespace Test
       XMLComponentBuilder target = new XMLComponentBuilder(componentInformation);
 
       ComponentContext actual = target.build();
-      Assert.Fail();
     }
 
     [TestMethod]
@@ -203,7 +197,6 @@ namespace Test
       XMLComponentBuilder target = new XMLComponentBuilder(componentInformation);
 
       ComponentContext actual = target.build();
-      Assert.Fail();
     }
 
     #region Private Members

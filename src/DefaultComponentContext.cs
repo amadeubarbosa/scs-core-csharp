@@ -83,8 +83,8 @@ namespace Scs.Core
       receptacles[name] = receptacle;
     }
 
-    /// <see cref="RemoveReceptacles" />
-    public void RemoveReceptacles(String name) {
+    /// <see cref="RemoveReceptacle" />
+    public void RemoveReceptacle(String name) {
       if (receptacles.ContainsKey(name)) {
         receptacles.Remove(name);
       }
@@ -106,6 +106,9 @@ namespace Scs.Core
 
     /// <see cref="GetFacetByName" />
     public Facet GetFacetByName(String name) {
+      if (name == null) {
+        return null;
+      }
       if (!facets.ContainsKey(name)) {
         return null;
       }
@@ -119,6 +122,9 @@ namespace Scs.Core
 
     /// <see cref="GetReceptacleByName" />    
     public Receptacle GetReceptacleByName(String name) {
+      if (name == null) {
+        return null;
+      }
       if (!receptacles.ContainsKey(name)) {
         return null;
       }
