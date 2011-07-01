@@ -231,7 +231,7 @@ namespace Scs.Core.Builder
         new Type[] { typeof(ComponentContext) });
       if (constructor == null) {
         string errorMsg = "Implementação da faceta deve possuir um" +
-          "contrutor com um parametro do tipo 'ComponentContext'";
+          " contrutor com um parametro do tipo 'ComponentContext'";
         throw new SCSException(errorMsg);
       }
 
