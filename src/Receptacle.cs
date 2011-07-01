@@ -116,7 +116,7 @@ namespace Scs.Core
     /// Fornece todas as conexões.
     /// </summary>
     /// <returns>A lista de conexões do receptáculo.</returns>
-    internal List<ConnectionDescription> GetConnections() {
+    public List<ConnectionDescription> GetConnections() {
       List<ConnectionDescription> connectionList =
           new List<ConnectionDescription>();
 
