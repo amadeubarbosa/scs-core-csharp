@@ -199,7 +199,7 @@ namespace Scs.Core.Builder
         Boolean isMultiple =
             XmlConvert.ToBoolean(receptacleNode[RECEPTACLE_MULTIPLE].InnerText);
 
-        context.PutReceptacle(name, interfaceName, isMultiple);
+        context.AddReceptacle(name, interfaceName, isMultiple);
       }
     }
 

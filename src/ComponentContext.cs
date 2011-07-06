@@ -91,7 +91,7 @@ namespace Scs.Core
     /// <param name="interfaceName">Inteface que o receptáculo permite conexão.</param>
     /// <param name="isMultiple"><code>True</code> caso o recepátulo aceitar 
     /// múltiplas conexões, <code>false</code> caso contrário.</param>
-    void PutReceptacle(String name, String interfaceName, Boolean isMultiple);
+    void AddReceptacle(String name, String interfaceName, Boolean isMultiple);
 
     /// <summary>
     /// Remove o receptáculo do componente.

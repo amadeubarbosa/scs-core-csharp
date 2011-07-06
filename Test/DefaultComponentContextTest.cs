@@ -306,80 +306,74 @@ namespace Test
 
 
     /// <summary>
-    ///A test for PutReceptacles
+    ///A test for AddReceptacles
     ///</summary>
     [TestMethod()]
     [ExpectedException(typeof(ArgumentException))]
-    public void PutReceptaclesTestNull1() {
+    public void AddReceptaclesTestNull1() {
       string interfaceName = Repository.GetRepositoryID(typeof(IComponent));
-      context.PutReceptacle(null, interfaceName, false);
+      context.AddReceptacle(null, interfaceName, false);
     }
 
     /// <summary>
-    ///A test for PutReceptacles
+    ///A test for AddReceptacles
     ///</summary>
     [TestMethod()]
     [ExpectedException(typeof(ArgumentException))]
-    public void PutReceptaclesTestNull2() {
-      context.PutReceptacle("ReceptacleName", null, false);
+    public void AddReceptaclesTestNull2() {
+      context.AddReceptacle("ReceptacleName", null, false);
     }
 
     /// <summary>
-    ///A test for PutReceptacles
+    ///A test for AddReceptacles
     ///</summary>
     [TestMethod()]
     [ExpectedException(typeof(ArgumentException))]
-    public void PutReceptaclesTestInvalid1() {
+    public void AddReceptaclesTestInvalid1() {
       string interfaceName = Repository.GetRepositoryID(typeof(IComponent));
-      context.PutReceptacle(String.Empty, interfaceName, true);
+      context.AddReceptacle(String.Empty, interfaceName, true);
     }
 
     /// <summary>
-    ///A test for PutReceptacles
+    ///A test for AddReceptacles
     ///</summary>
     [TestMethod()]
     [ExpectedException(typeof(ArgumentException))]
-    public void PutReceptaclesTestInvalid2() {
-      context.PutReceptacle("ReceptacleName", String.Empty, false);
+    public void AddReceptaclesTestInvalid2() {
+      context.AddReceptacle("ReceptacleName", String.Empty, false);
     }
 
     /// <summary>
-    ///A test for PutReceptacles
+    ///A test for AddReceptacles
     ///</summary>
     [TestMethod()]
     [ExpectedException(typeof(ArgumentException))]
-    public void PutReceptaclesTestInvalid3() {
-      context.PutReceptacle("ReceptacleName", "InvalidName", false);
+    public void AddReceptaclesTestInvalid3() {
+      context.AddReceptacle("ReceptacleName", "InvalidName", false);
     }
 
     /// <summary>
-    ///A test for PutReceptacles
+    ///A test for AddReceptacles
     ///</summary>
     [TestMethod()]
-    public void PutReceptaclesTest1() {
+    public void AddReceptaclesTest1() {
       foreach (var receptacle in receptacleList) {
-        context.PutReceptacle(receptacle.name, receptacle.interfaceName, receptacle.isMultiple);
+        context.AddReceptacle(receptacle.name, receptacle.interfaceName, receptacle.isMultiple);
       }
       IDictionary<String, Receptacle> target = context.GetReceptacles();
       Assert.AreEqual(receptacleList.Count, target.Count);
     }
 
     /// <summary>
-    ///A test for PutReceptacles
+    ///A test for AddReceptacles
     ///</summary>
     [TestMethod()]
-    public void PutReceptaclesTest2() {
+    [ExpectedException(typeof(ReceptacleAlreadyExistsException))]
+    public void AddReceptaclesTest2() {
       String name = "ReceptacleName";
       String interfaceName = Repository.GetRepositoryID(typeof(IComponent));
-      context.PutReceptacle(name, interfaceName, false);
-      Receptacle expected = context.GetReceptacleByName(name);
-      Assert.IsNotNull(expected);
-
-      String newInterfaceName = Repository.GetRepositoryID(typeof(IMetaInterface));
-      context.PutReceptacle(name, newInterfaceName, true);
-      Receptacle target = context.GetReceptacleByName(name);
-      Assert.AreNotEqual(expected.InterfaceName, target.InterfaceName);
-      Assert.AreNotEqual(expected.IsMultiple, target.IsMultiple);
+      context.AddReceptacle(name, interfaceName, false);
+      context.AddReceptacle(name, interfaceName, false);
     }
 
     /// <summary>
@@ -391,7 +385,7 @@ namespace Test
       Receptacle actual = context.GetReceptacleByName(recInfo.name);
       Assert.IsNull(actual);
 
-      context.PutReceptacle(recInfo.name, recInfo.interfaceName, recInfo.isMultiple);
+      context.AddReceptacle(recInfo.name, recInfo.interfaceName, recInfo.isMultiple);
       actual = context.GetReceptacleByName(recInfo.name);
       Assert.IsNotNull(actual);
 
@@ -409,7 +403,7 @@ namespace Test
       foreach (var receptacle in receptacleList) {
         expected.Add(receptacle.name, new Receptacle(
             receptacle.name, receptacle.interfaceName, receptacle.isMultiple));
-        context.PutReceptacle(
+        context.AddReceptacle(
           receptacle.name, receptacle.interfaceName, receptacle.isMultiple);
       }
       IDictionary<string, Receptacle> actual = context.GetReceptacles();
@@ -424,7 +418,7 @@ namespace Test
       string name = typeof(IComponent).Name;
       string interfaceName = Repository.GetRepositoryID(typeof(IComponent));
       Receptacle expected = new Receptacle(name, interfaceName, true);
-      context.PutReceptacle(name, interfaceName, true);
+      context.AddReceptacle(name, interfaceName, true);
       Receptacle actual = context.GetReceptacleByName(name);
       Assert.AreEqual(expected, actual);
     }

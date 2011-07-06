@@ -95,8 +95,14 @@ namespace Scs.Core
       facets.Remove(name);
     }
 
-    /// <see cref="PutReceptacle" />
-    public void PutReceptacle(String name, String interfaceName, Boolean isMultiple) {
+    /// <see cref="AddReceptacle" />
+    public void AddReceptacle(String name, String interfaceName, Boolean isMultiple) {
+      if (String.IsNullOrEmpty(name))
+        throw new ArgumentException("O campo 'name' não pode ser nulo ou vazio.", "name");
+
+      if(receptacles.ContainsKey(name)){
+        throw new ReceptacleAlreadyExistsException(name);
+      }
       Receptacle receptacle = new Receptacle(name, interfaceName, isMultiple);
       receptacles[name] = receptacle;
     }

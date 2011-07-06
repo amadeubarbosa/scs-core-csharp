@@ -58,7 +58,7 @@ namespace Test
     public void getReceptaclesByNameTest() {
       IMetaInterfaceServant target = new IMetaInterfaceServant(context);
       foreach (var name in receptacleNames) {
-        context.PutReceptacle(name, interfaceName, false);
+        context.AddReceptacle(name, interfaceName, false);
       }
 
       string[] names = receptacleNames.ToArray();
@@ -74,7 +74,7 @@ namespace Test
     public void getReceptaclesByNameTest2() {
       IMetaInterfaceServant target = new IMetaInterfaceServant(context);
       foreach (var name in receptacleNames) {
-        context.PutReceptacle(name, interfaceName, false);
+        context.AddReceptacle(name, interfaceName, false);
       }
 
       string[] names = receptacleNames.ToArray();
@@ -92,7 +92,7 @@ namespace Test
     public void getReceptaclesTest() {
       IMetaInterfaceServant target = new IMetaInterfaceServant(context);
       foreach (var name in receptacleNames) {
-        context.PutReceptacle(name, interfaceName, false);
+        context.AddReceptacle(name, interfaceName, false);
       }
 
       IDictionary<String, Receptacle> expected = context.GetReceptacles();

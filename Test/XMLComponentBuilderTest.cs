@@ -80,7 +80,7 @@ namespace Test
       recInformationList.Add(receptacleInfo3);
 
       foreach (var recInfo in recInformationList) {
-        expected.PutReceptacle(recInfo.name, recInfo.interfaceName, recInfo.isMultiple);
+        expected.AddReceptacle(recInfo.name, recInfo.interfaceName, recInfo.isMultiple);
       }
 
       String componentModel = Resources.Component5;

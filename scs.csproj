@@ -63,6 +63,7 @@
     <Compile Include="src\Builder\XmlComponentBuilder.cs" />
     <Compile Include="src\ComponentContext.cs" />
     <Compile Include="src\DefaultComponentContext.cs" />
+    <Compile Include="src\Exception\ReceptacleAlreadyExistsException.cs" />
     <Compile Include="src\Exception\FacetDoesNotExistException.cs" />
     <Compile Include="src\Exception\FacetAlreadyExistsException.cs" />
     <Compile Include="src\Exception\SCSException.cs" />

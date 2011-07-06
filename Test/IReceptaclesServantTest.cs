@@ -40,7 +40,7 @@ namespace Test
       context = new DefaultComponentContext(componentId);
       servant = new IComponentServant(context);
       foreach (var name in receptacleNames) {
-        context.PutReceptacle(name, interfaceName, true);
+        context.AddReceptacle(name, interfaceName, true);
       }
     }
 
@@ -87,7 +87,7 @@ namespace Test
       string name = "SimpleReceptacle";
       string interfaceName = Repository.GetRepositoryID(typeof(IMetaInterface));
       MarshalByRefObject servant = new IMetaInterfaceServant(context);
-      context.PutReceptacle(name, interfaceName, false);
+      context.AddReceptacle(name, interfaceName, false);
 
       target.connect(name, servant);
       target.connect(name, servant);
@@ -106,7 +106,7 @@ namespace Test
       IReceptaclesServant target = new IReceptaclesServant(context);
       string name = "SimpleReceptacle";
       string interfaceName = Repository.GetRepositoryID(typeof(IMetaInterface));
-      context.PutReceptacle(name, interfaceName, false);
+      context.AddReceptacle(name, interfaceName, false);
 
       MarshalByRefObject servant = new IComponentServant(context);
       target.connect(name, servant);

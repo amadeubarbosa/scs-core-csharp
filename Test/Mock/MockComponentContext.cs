@@ -46,7 +46,7 @@ namespace Test.Mock
       throw new NotImplementedException();
     }
 
-    public void PutReceptacle(string name, string interfaceName, bool isMultiple) {
+    public void AddReceptacle(string name, string interfaceName, bool isMultiple) {
       throw new NotImplementedException();
     }
 
