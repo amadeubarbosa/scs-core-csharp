@@ -59,9 +59,9 @@ namespace Scs.Core
     /// <param name="isMultiple">Infomra se o receptáculo é múltiplo.</param>
     public Receptacle(string name, string interfaceName, bool isMultiple) {
       if (String.IsNullOrEmpty(name))
-        throw new ArgumentException("name is null or empty.", "name");
+        throw new ArgumentException("O campo 'name' não pode ser nulo ou vazio.", "name");
       if (String.IsNullOrEmpty(interfaceName))
-        throw new ArgumentException("interfaceName is null or empty.", "interfaceName");
+        throw new ArgumentException("O campo 'interfaceName' não pode ser nulo ou vazio.", "interfaceName");      
       if (!checkInterface(interfaceName))
         throw new ArgumentException("O campo 'interfaceName' não está de acordo com o padrão");
 
