@@ -57,14 +57,23 @@ namespace Scs.Core
 
     /// <summary>
     /// Adiciona a faceta ao componente. O método ativa a faceta.
-    /// 
-    /// Se já existir uma faceta com o mesmo nome, a faceta antiga será 
-    /// desativada e sobrescrita.
     /// </summary>
     /// <param name="name">Nome da faceta.</param>
     /// <param name="interfaceName">Nome da interface (repositoryID)</param>
     /// <param name="servant">A instância da implementação da faceta.</param>
-    void PutFacet(String name, String interfaceName, MarshalByRefObject servant);
+    /// <exception cref="Scs.Core.Exception.FacetAlreadyExistsException">
+    /// Caso exista uma faceta com o mesmo nome.</exception>
+    void AddFacet(String name, String interfaceName, MarshalByRefObject servant);
+
+    /// <summary>
+    /// Atualiza a faceta do componente identificada pelo nome.
+    /// </summary>
+    /// <param name="name">Nome da faceta.</param>
+    /// <param name="servant">A nova instância da implementação da faceta.    
+    /// </param>
+    /// <exception cref="Scs.Core.Exception.FacetDoesNotExistException">
+    /// Caso não exista uma faceta com o mesmo nome.</exception>
+    void UpdateFacet(String name, MarshalByRefObject servant);
 
     /// <summary>
     /// Remove a faceta do componente. O método desativa a faceta do POA.

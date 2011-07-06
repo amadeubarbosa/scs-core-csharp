@@ -181,7 +181,7 @@ namespace Scs.Core.Builder
           throw new SCSException(errorMsg);
         }
 
-        context.PutFacet(name, interfaceName, servant);
+        context.AddFacet(name, interfaceName, servant);
       }
     }
 

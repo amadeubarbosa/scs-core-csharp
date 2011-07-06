@@ -44,7 +44,7 @@ namespace Test
       facetInfomationList.Add(facetInfo3);
 
       foreach (var facetInfo in facetInfomationList) {
-        expected.PutFacet(facetInfo.name, facetInfo.interfaceName, facetInfo.servant);
+        expected.AddFacet(facetInfo.name, facetInfo.interfaceName, facetInfo.servant);
       }
 
       String componentModel = Resources.Component1;

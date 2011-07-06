@@ -5,6 +5,7 @@ using scs.core;
 using Scs.Core.Servant;
 using Scs.Core.Util;
 using System.Text.RegularExpressions;
+using Scs.Core.Exception;
 
 namespace Scs.Core
 {
@@ -57,14 +58,31 @@ namespace Scs.Core
       return this.componentId;
     }
 
-    /// <see cref="PutFacet" />
-    public void PutFacet(String name, String interfaceName, MarshalByRefObject servant) {
-      Facet facet = new Facet(name, interfaceName, servant);
+    /// <see cref="AddFacet" />
+    public void AddFacet(String name, String interfaceName, MarshalByRefObject servant) {
+      if (String.IsNullOrEmpty(name))
+        throw new ArgumentException("O campo 'name' não pode ser nulo ou vazio.", "name");      
+
       if (facets.ContainsKey(name)) {
-        IiopNetUtil.DeactivateFacet(facets[name].Reference);
+        throw new FacetAlreadyExistsException(name);
       }
+      Facet facet = new Facet(name, interfaceName, servant);
       facets[name] = facet;
       ObjRef activateFacet = IiopNetUtil.ActivateFacet(servant);
+    }
+
+    /// <see cref="UpdateFacet" />
+    public void UpdateFacet(String name, MarshalByRefObject servant) {
+      if (String.IsNullOrEmpty(name))
+        throw new ArgumentException("O campo 'name' não pode ser nulo ou vazio.", "name");  
+
+      if (!facets.ContainsKey(name)) {
+        throw new FacetDoesNotExistException(name);
+      }
+      IiopNetUtil.DeactivateFacet(facets[name].Reference);
+      String interfaceName = facets[name].InterfaceName;
+      Facet facet = new Facet(name, interfaceName, servant);
+      facets[name] = facet;
     }
 
     /// <see cref="RemoveFacet" />
@@ -161,7 +179,7 @@ namespace Scs.Core
       if (!facets.ContainsKey(icomponentName)) {
         IComponent icomponent = new IComponentServant(this);
         MarshalByRefObject icomponentServant = icomponent as MarshalByRefObject;
-        PutFacet(icomponentName, icomponentInterfaceName, icomponentServant);
+        AddFacet(icomponentName, icomponentInterfaceName, icomponentServant);
       }
 
       Type ireceptacleType = typeof(IReceptacles);
@@ -170,7 +188,7 @@ namespace Scs.Core
       if (!facets.ContainsKey(ireceptacleName)) {
         IReceptacles receptacle = new IReceptaclesServant(this);
         MarshalByRefObject receptacleServant = receptacle as MarshalByRefObject;
-        PutFacet(ireceptacleName, ireceptacleInterfaceName, receptacleServant);
+        AddFacet(ireceptacleName, ireceptacleInterfaceName, receptacleServant);
       }
 
       Type imetaInterfaceType = typeof(IMetaInterface);
@@ -179,7 +197,7 @@ namespace Scs.Core
       if (!facets.ContainsKey(imetaInterfaceName)) {
         IMetaInterface metaInterface = new IMetaInterfaceServant(this);
         MarshalByRefObject metaInterfaceServant = metaInterface as MarshalByRefObject;
-        PutFacet(imetaInterfaceName, imetaInterfaceInterfaceName, metaInterfaceServant);
+        AddFacet(imetaInterfaceName, imetaInterfaceInterfaceName, metaInterfaceServant);
       }
     }
 

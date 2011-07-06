@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using scs.core;
 using Scs.Core;
 using Scs.Core.Servant;
+using Scs.Core.Exception;
 
 namespace Test
 {
@@ -32,7 +33,7 @@ namespace Test
     [ClassInitialize()]
     public static void BeforeClass(TestContext testContext) {
       componentId = new ComponentId("Component1", 1, 0, 0, "none");
-   
+
     }
 
     [TestInitialize()]
@@ -44,7 +45,7 @@ namespace Test
       Type imetaInterfaceType = typeof(IMetaInterface);
       String icomponentInterfaceName = Repository.GetRepositoryID(icomponentType);
       string ireceptacleInterfaceName = Repository.GetRepositoryID(ireceptacleType);
-      string imetaInterfaceInterfaceName = Repository.GetRepositoryID(imetaInterfaceType);   
+      string imetaInterfaceInterfaceName = Repository.GetRepositoryID(imetaInterfaceType);
       facetList = new List<FacetInformation>();
       facetList.Add(new FacetInformation(
           "Faceta3", icomponentInterfaceName, new IComponentServant(context)));
@@ -112,7 +113,7 @@ namespace Test
       string interfaceName = Repository.GetRepositoryID(typeof(IComponent));
       MarshalByRefObject servant = new IComponentServant(context);
       Facet expected = new Facet(name, interfaceName, servant);
-      context.PutFacet(name, interfaceName, servant);
+      context.UpdateFacet(name, servant);
       Facet actual = context.GetFacetByName(name);
       Assert.AreEqual(expected, actual);
     }
@@ -125,40 +126,40 @@ namespace Test
     }
 
     [TestMethod]
-    public void GetFacetByNameTest3() {      
+    public void GetFacetByNameTest3() {
       Facet actual = context.GetFacetByName(null);
       Assert.IsNull(actual);
     }
 
     /// <summary>
-    /// A test for PutFacet null Name
+    /// A test for AddFacet null Name
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void PutFacetTestNull1() {
+    public void AddFacetTestNull1() {
       string interfaceName = Repository.GetRepositoryID(typeof(IComponent));
       MarshalByRefObject servant = new IComponentServant(context);
-      context.PutFacet(null, interfaceName, servant);
+      context.AddFacet(null, interfaceName, servant);
     }
 
     /// <summary>
-    /// A test for PutFacet null InterfaceName
+    /// A test for AddFacet null InterfaceName
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void PutFacetTestNull2() {
+    public void AddFacetTestNull2() {
       MarshalByRefObject servant = new IComponentServant(context);
-      context.PutFacet("facetName", null, servant);
+      context.AddFacet("facetName", null, servant);
     }
 
     /// <summary>
-    /// A test for PutFacet null Servant
+    /// A test for AddFacet null Servant
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
-    public void PutFacetTestNull3() {
+    public void AddFacetTestNull3() {
       string interfaceName = Repository.GetRepositoryID(typeof(IComponent));
-      context.PutFacet("facetName", interfaceName, null);
+      context.AddFacet("facetName", interfaceName, null);
     }
 
     /// <summary>
@@ -166,10 +167,10 @@ namespace Test
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void PutFacetTestInvalid1() {
+    public void AddFacetTestInvalid1() {
       string interfaceName = Repository.GetRepositoryID(typeof(IComponent));
       MarshalByRefObject servant = new IComponentServant(context);
-      context.PutFacet(String.Empty, interfaceName, servant);
+      context.AddFacet(String.Empty, interfaceName, servant);
     }
 
     /// <summary>
@@ -177,9 +178,9 @@ namespace Test
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void PutFacetTestInvalid2() {
+    public void AddFacetTestInvalid2() {
       MarshalByRefObject servant = new IComponentServant(context);
-      context.PutFacet("facetName", String.Empty, servant);
+      context.AddFacet("facetName", String.Empty, servant);
     }
 
     /// <summary>
@@ -187,28 +188,28 @@ namespace Test
     /// </summary>
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void PutFacetTestInvalid3() {
+    public void AddFacetTestInvalid3() {
       MarshalByRefObject servant = new IComponentServant(context);
-      context.PutFacet("facetName", "InvalidName", servant);
+      context.AddFacet("facetName", "InvalidName", servant);
     }
 
     /// <summary>
     /// Verificar se é possível adicionar facetas do mesmo tipo.
     /// </summary>
     [TestMethod()]
-    public void PutFacetTest1() {
+    public void AddFacetTest1() {
       string interfaceName = Repository.GetRepositoryID(typeof(IMetaInterface));
-      context.PutFacet("SameFacet1", interfaceName, new IMetaInterfaceServant(context));
-      context.PutFacet("SameFacet2", interfaceName, new IMetaInterfaceServant(context));
+      context.AddFacet("SameFacet1", interfaceName, new IMetaInterfaceServant(context));
+      context.AddFacet("SameFacet2", interfaceName, new IMetaInterfaceServant(context));
     }
 
     /// <summary>
-    /// A test for PutFacet
+    /// A test for AddFacet
     /// </summary>
     [TestMethod()]
-    public void PutFacetTest2() {
+    public void AddFacetTest2() {
       foreach (var facet in facetList) {
-        context.PutFacet(facet.name, facet.interfaceName, facet.servant);
+        context.AddFacet(facet.name, facet.interfaceName, facet.servant);
       }
 
       IDictionary<String, Facet> target = context.GetFacets();
@@ -222,16 +223,66 @@ namespace Test
     /// Verifica se o método está atualizando a faceta.
     /// </summary>
     [TestMethod()]
-    public void PutFacetTest3() {
+    [ExpectedException(typeof(FacetAlreadyExistsException))]
+    public void AddFacetTest3() {
       string icomponentName = typeof(IComponent).Name;
       Facet expected = context.GetFacetByName(icomponentName);
 
       string interfaceName = Repository.GetRepositoryID(typeof(IMetaInterface));
       MarshalByRefObject servant = new IMetaInterfaceServant(context);
-      context.PutFacet(icomponentName, interfaceName, servant);
-      Facet actual = context.GetFacetByName(icomponentName);
-      Assert.AreNotEqual(expected.InterfaceName, actual.InterfaceName);
+      context.AddFacet(icomponentName, interfaceName, servant);
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void UpdateFacetNull1() {
+      MarshalByRefObject servant = new IComponentServant(context);
+      context.UpdateFacet(null, servant);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void UpdateFacetNull2() {
+      string name = typeof(IComponent).Name;
+      context.UpdateFacet(name, null);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void UpdateFacetInvalid1() {
+      MarshalByRefObject servant = new IComponentServant(context);
+      context.UpdateFacet(String.Empty, servant);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void UpdateFacetInvalid2() {
+      string name = typeof(IComponent).Name;
+      MarshalByRefObject servant = new IReceptaclesServant(context);
+      context.UpdateFacet(name, servant);
+    }
+
+    [TestMethod]
+    public void UpdateFacet1() {
+      string name = typeof(IMetaInterface).Name;
+      MarshalByRefObject servant = new IMetaInterfaceServant(context);
+      Facet oldFacet = context.GetFacetByName(name);
+
+      context.UpdateFacet(name, servant);
+      Facet actual = context.GetFacetByName(name);
+
+      Assert.AreEqual(servant, actual.Reference);
+      Assert.AreEqual(oldFacet.Name, actual.Name);
+      Assert.AreNotEqual(oldFacet.Reference, actual.Reference);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(FacetDoesNotExistException))]
+    public void UpdateFacet2() {
+      MarshalByRefObject servant = new IMetaInterfaceServant(context);
+      context.UpdateFacet("invalidFacetName", servant);
+    }
+
     [TestMethod]
     public void GetFacetsTest() {
       IDictionary<string, Facet> actual = context.GetFacets();
@@ -244,7 +295,7 @@ namespace Test
       Facet actual = context.GetFacetByName(facetInfo.name);
       Assert.IsNull(actual);
 
-      context.PutFacet(facetInfo.name, facetInfo.interfaceName, facetInfo.servant);
+      context.AddFacet(facetInfo.name, facetInfo.interfaceName, facetInfo.servant);
       actual = context.GetFacetByName(facetInfo.name);
       Assert.IsNotNull(actual);
 
@@ -386,7 +437,7 @@ namespace Test
     }
 
     [TestMethod()]
-    public void GetReceptacleByNameTest3() {      
+    public void GetReceptacleByNameTest3() {
       Receptacle actual = context.GetReceptacleByName(null);
       Assert.IsNull(actual);
     }

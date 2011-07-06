@@ -36,7 +36,7 @@ namespace Test.Mock
       throw new NotImplementedException();
     }
 
-    public void PutFacet(string name, string interfaceName, MarshalByRefObject servant) {
+    public void AddFacet(string name, string interfaceName, MarshalByRefObject servant) {
       throw new NotImplementedException();
     }
 
@@ -57,6 +57,10 @@ namespace Test.Mock
     }
 
     public void DeactivateComponent() {
+      throw new NotImplementedException();
+    }
+
+    public void UpdateFacet(string name, MarshalByRefObject servant) {
       throw new NotImplementedException();
     }
 
