@@ -27,8 +27,8 @@ namespace Server
       string pingpongRepID = Repository.GetRepositoryID(typeof(PingPongServer));
 
       //Criando o component Pong.
-      pongContext.PutFacet("Pong", pingpongRepID, pongServant);
-      pongContext.PutReceptacle("PingRec", pingpongRepID, false);
+      pongContext.AddFacet("Pong", pingpongRepID, pongServant);
+      pongContext.AddReceptacle("PingRec", pingpongRepID, false);
 
       String pingIorPath = Pong.Properties.Resources.IorFilename;
       StreamReader stream = new StreamReader(pingIorPath);
