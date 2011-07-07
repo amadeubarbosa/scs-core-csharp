@@ -199,6 +199,12 @@ namespace Test
       ComponentContext actual = target.build();
     }
 
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void buildTestNull1() {
+      XMLComponentBuilder builder = new XMLComponentBuilder(null);
+    }
+
     #region Private Members
 
     private struct FacetInformation
