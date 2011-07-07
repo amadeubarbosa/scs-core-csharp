@@ -58,6 +58,10 @@ namespace Scs.Core.Builder
     /// <param name="componentInformation">
     /// Arquivo de descrição do componente.
     /// </param>
+    /// <exception cref="XmlSchemaValidationException">Caso ocorra um erro na 
+    /// validação do Xml.</exception>
+    /// <exception cref="ArgumentNullException">Caso o argumento seja nulo.
+    /// </exception>
     public XMLComponentBuilder(XmlTextReader componentInformation) {
       MemoryStream memorySchema = new MemoryStream(Resources.ComponentModel);
       XmlTextReader xsdReader = new XmlTextReader(memorySchema);
@@ -86,6 +90,8 @@ namespace Scs.Core.Builder
     /// e todas as facetas e receptáculos representados no arquivo de descrição.
     /// </summary>
     /// <returns>O componente.</returns>
+    /// <exception cref="SCSException">Caso ocorra um erro na construção do 
+    /// componente.</exception>
     public ComponentContext build() {
       ComponentId componentId = GetComponentId();
 
@@ -125,6 +131,8 @@ namespace Scs.Core.Builder
     /// </summary>
     /// <param name="componentId">O id do componente.</param>
     /// <returns></returns>
+    /// <exception cref="SCSException">Caso ocorra um erro na construção do 
+    /// componentContext</exception>
     private ComponentContext CreateComponentContext(ComponentId componentId) {
       XmlNode componentContextNode =
           xmlComponent.GetElementsByTagName(COMPONENT_CONTEXT_ELEMENT)[0];
@@ -145,7 +153,7 @@ namespace Scs.Core.Builder
       System.Reflection.ConstructorInfo constructor =
           contextType.GetConstructor(new Type[] { typeof(ComponentId) });
       if (constructor == null) {
-        string errorMsg = "Implementação do componentContext deve possuir um contrutor com um parametro do tipo 'ComponentId'";
+        string errorMsg = "Implementação do componentContext deve possuir um construtor com um parâmetro do tipo 'ComponentId'";
         throw new SCSException(errorMsg);
       }
       ComponentContext component =
@@ -163,6 +171,7 @@ namespace Scs.Core.Builder
     /// Adiciona as facetas do arquivo de descrição ao componente. 
     /// </summary>
     /// <param name="context">O componente</param>
+    /// <exception cref="SCSException">Caso ocorra um erro na criação das facetas.</exception>
     private void AddFacets(ComponentContext context) {
       XmlNodeList facetsNodeList =
           xmlComponent.GetElementsByTagName(FACET_ELEMENT);
@@ -211,6 +220,7 @@ namespace Scs.Core.Builder
     /// componentContext necessário na contrução de um servantNode
     /// </param>
     /// <returns>Servant</returns>
+    /// <exception cref="SCSException">Caso ocorra um erro na criação do servant.</exception>
     private MarshalByRefObject InstantiateServant(String type, ComponentContext context) {
       Type facetType;
       try {

@@ -59,6 +59,10 @@ namespace Scs.Core
     }
 
     /// <see cref="AddFacet" />
+    /// <exception cref="ArgumentException">Caso os argumentos estejam
+    /// incorretos</exception>
+    /// <exception cref="ArgumentNullException">Caso os argumentos estejam
+    /// nulos</exception>
     public void AddFacet(String name, String interfaceName, MarshalByRefObject servant) {
       if (String.IsNullOrEmpty(name))
         throw new ArgumentException("O campo 'name' não pode ser nulo ou vazio.", "name");      
@@ -72,6 +76,10 @@ namespace Scs.Core
     }
 
     /// <see cref="UpdateFacet" />
+    /// <exception cref="ArgumentException">Caso os argumentos estejam
+    /// incorretos</exception>
+    /// <exception cref="ArgumentNullException">Caso os argumentos estejam
+    /// nulos</exception>
     public void UpdateFacet(String name, MarshalByRefObject servant) {
       if (String.IsNullOrEmpty(name))
         throw new ArgumentException("O campo 'name' não pode ser nulo ou vazio.", "name");  
@@ -96,6 +104,10 @@ namespace Scs.Core
     }
 
     /// <see cref="AddReceptacle" />
+    /// <exception cref="ArgumentException">Caso os argumentos estejam
+    /// incorretos</exception>
+    /// <exception cref="ArgumentNullException">Caso os argumentos estejam
+    /// nulos</exception>
     public void AddReceptacle(String name, String interfaceName, Boolean isMultiple) {
       if (String.IsNullOrEmpty(name))
         throw new ArgumentException("O campo 'name' não pode ser nulo ou vazio.", "name");
