@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Remoting;
+using log4net;
 using scs.core;
+using Scs.Core.Exception;
 using Scs.Core.Servant;
 using Scs.Core.Util;
-using System.Text.RegularExpressions;
-using Scs.Core.Exception;
 
 namespace Scs.Core
 {
@@ -17,6 +17,11 @@ namespace Scs.Core
   {
 
     #region Fields
+
+    /// <summary>
+    /// O log
+    /// </summary>
+    private static ILog logger = LogManager.GetLogger(typeof(DefaultComponentContext));
 
     /// <summary>
     /// O identificador do componente.
@@ -64,8 +69,9 @@ namespace Scs.Core
     /// <exception cref="ArgumentNullException">Caso os argumentos estejam
     /// nulos</exception>
     public void AddFacet(String name, String interfaceName, MarshalByRefObject servant) {
-      if (String.IsNullOrEmpty(name))
-        throw new ArgumentException("O campo 'name' não pode ser nulo ou vazio.", "name");      
+      if (String.IsNullOrEmpty(name)) {
+        throw new ArgumentException("O campo 'name' não pode ser nulo ou vazio.", "name");
+      }
 
       if (facets.ContainsKey(name)) {
         throw new FacetAlreadyExistsException(name);
@@ -82,7 +88,7 @@ namespace Scs.Core
     /// nulos</exception>
     public void UpdateFacet(String name, MarshalByRefObject servant) {
       if (String.IsNullOrEmpty(name))
-        throw new ArgumentException("O campo 'name' não pode ser nulo ou vazio.", "name");  
+        throw new ArgumentException("O campo 'name' não pode ser nulo ou vazio.", "name");
 
       if (!facets.ContainsKey(name)) {
         throw new FacetDoesNotExistException(name);
@@ -96,6 +102,7 @@ namespace Scs.Core
     /// <see cref="RemoveFacet" />
     public void RemoveFacet(String name) {
       if (!facets.ContainsKey(name)) {
+        logger.WarnFormat("Não existe a faceta '{0}' no componente.", name);
         return;
       }
       MarshalByRefObject facetObj = facets[name].Reference;
@@ -112,7 +119,7 @@ namespace Scs.Core
       if (String.IsNullOrEmpty(name))
         throw new ArgumentException("O campo 'name' não pode ser nulo ou vazio.", "name");
 
-      if(receptacles.ContainsKey(name)){
+      if (receptacles.ContainsKey(name)) {
         throw new ReceptacleAlreadyExistsException(name);
       }
       Receptacle receptacle = new Receptacle(name, interfaceName, isMultiple);
@@ -121,15 +128,18 @@ namespace Scs.Core
 
     /// <see cref="RemoveReceptacle" />
     public void RemoveReceptacle(String name) {
-      if (receptacles.ContainsKey(name)) {
-        receptacles.Remove(name);
+      if (!receptacles.ContainsKey(name)) {
+        logger.WarnFormat("Não existe o receptáculo '{0}' no componente.", name);
+        return;
       }
+      receptacles.Remove(name);
     }
 
     /// <see cref="GetIComponent" />
     public IComponent GetIComponent() {
       string iComponentName = typeof(IComponent).Name;
       if (!facets.ContainsKey(iComponentName)) {
+        logger.Warn("O componente não possui a faceta IComponent.");
         return null;
       }
       return facets[iComponentName].Reference as IComponent;
@@ -143,9 +153,11 @@ namespace Scs.Core
     /// <see cref="GetFacetByName" />
     public Facet GetFacetByName(String name) {
       if (name == null) {
+        logger.Info("Erro ao fornecer faceta. O parâmetro 'name' está nulo");
         return null;
       }
       if (!facets.ContainsKey(name)) {
+        logger.WarnFormat("Não existe a faceta '{0}' no componente.", name);
         return null;
       }
       return facets[name];
@@ -159,9 +171,11 @@ namespace Scs.Core
     /// <see cref="GetReceptacleByName" />    
     public Receptacle GetReceptacleByName(String name) {
       if (name == null) {
+        logger.Info("O parâmetro 'name' está nulo");
         return null;
       }
       if (!receptacles.ContainsKey(name)) {
+        logger.WarnFormat("Não existe o receptáculo '{0}' no componente.", name);
         return null;
       }
       return receptacles[name];
@@ -198,6 +212,7 @@ namespace Scs.Core
         IComponent icomponent = new IComponentServant(this);
         MarshalByRefObject icomponentServant = icomponent as MarshalByRefObject;
         AddFacet(icomponentName, icomponentInterfaceName, icomponentServant);
+        logger.DebugFormat("Faceta '{0}' adicionada com sucesso", icomponentName);
       }
 
       Type ireceptacleType = typeof(IReceptacles);
@@ -207,6 +222,7 @@ namespace Scs.Core
         IReceptacles receptacle = new IReceptaclesServant(this);
         MarshalByRefObject receptacleServant = receptacle as MarshalByRefObject;
         AddFacet(ireceptacleName, ireceptacleInterfaceName, receptacleServant);
+        logger.DebugFormat("Faceta '{0}' adicionada com sucesso", ireceptacleName);
       }
 
       Type imetaInterfaceType = typeof(IMetaInterface);
@@ -216,6 +232,7 @@ namespace Scs.Core
         IMetaInterface metaInterface = new IMetaInterfaceServant(this);
         MarshalByRefObject metaInterfaceServant = metaInterface as MarshalByRefObject;
         AddFacet(imetaInterfaceName, imetaInterfaceInterfaceName, metaInterfaceServant);
+        logger.DebugFormat("Faceta '{0}' adicionada com sucesso", imetaInterfaceName);
       }
     }
 

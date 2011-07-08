@@ -13,6 +13,7 @@ namespace Server
   class Program
   {
     static void Main(string[] args) {
+      log4net.Config.XmlConfigurator.Configure();
 
       Console.WriteLine("Pressione 'enter' quando o componente Ping estiver no ar.");
       Console.ReadLine();

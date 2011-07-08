@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
-using scs.core;
 using System.Text.RegularExpressions;
+using System.Threading;
+using log4net;
+using scs.core;
 
 namespace Scs.Core
 {
@@ -12,6 +13,11 @@ namespace Scs.Core
   public class Receptacle
   {
     #region Fields
+
+    /// <summary>
+    /// O log
+    /// </summary>
+    private static ILog logger = LogManager.GetLogger(typeof(Receptacle));
 
     /// <summary>
     /// Nome do receptáculo.
@@ -61,7 +67,7 @@ namespace Scs.Core
       if (String.IsNullOrEmpty(name))
         throw new ArgumentException("O campo 'name' não pode ser nulo ou vazio.", "name");
       if (String.IsNullOrEmpty(interfaceName))
-        throw new ArgumentException("O campo 'interfaceName' não pode ser nulo ou vazio.", "interfaceName");      
+        throw new ArgumentException("O campo 'interfaceName' não pode ser nulo ou vazio.", "interfaceName");
       if (!checkInterface(interfaceName))
         throw new ArgumentException("O campo 'interfaceName' não está de acordo com o padrão");
 
@@ -93,8 +99,10 @@ namespace Scs.Core
     /// contrário.
     /// </returns>
     internal int AddConnections(MarshalByRefObject connection) {
-      if (connection == null)
+      if (connection == null) {
+        logger.Warn("Erro ao adicionar a conexão. O parâmetro 'connection' está nulo.");
         return -1;
+      }
 
       int id = Interlocked.Increment(ref Receptacle.connectionId);
       this.connections.Add(id, connection);

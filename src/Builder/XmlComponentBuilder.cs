@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Schema;
+using log4net;
 using scs.core;
 using Scs.Core.Exception;
 using Scs.Core.Properties;
 using Scs.Core.Util;
+using System.Text;
 
 namespace Scs.Core.Builder
 {
@@ -42,6 +45,11 @@ namespace Scs.Core.Builder
     #endregion
 
     #region Fields
+
+    /// <summary>
+    /// O log.
+    /// </summary>
+    private static ILog logger = LogManager.GetLogger(typeof(XMLComponentBuilder));
 
     /// <summary>
     /// O Xml do componente.
@@ -99,6 +107,7 @@ namespace Scs.Core.Builder
       AddFacets(component);
       AddReceptacles(component);
 
+      DumpComponent(component);
       return component;
     }
 
@@ -137,17 +146,18 @@ namespace Scs.Core.Builder
       XmlNode componentContextNode =
           xmlComponent.GetElementsByTagName(COMPONENT_CONTEXT_ELEMENT)[0];
       if (componentContextNode == null) {
+        logger.Debug("Criando o contexto utilizando a classe 'DefaultComponentContext'");
         return new DefaultComponentContext(componentId);
       }
 
       XmlNode context = componentContextNode[COMPONENT_CONTEXT_TYPE];
       String contextName = context.InnerText;
       String contextAssembly = context.Attributes[COMPONENT_CONTEXT_ASSEMBLY_ATTRIBUTE].InnerText;
-      String type = String.Format("{0}, {1}", contextName, contextAssembly);
-      Type contextType = Type.GetType(type);
+      String contextTypeName = String.Format("{0}, {1}", contextName, contextAssembly);
+      Type contextType = Type.GetType(contextTypeName);
       if (contextType == null) {
         throw new SCSException(String.Format(
-          "Não foi possível encontrar a classe '{0}'", type));
+          "Não foi possível encontrar a classe '{0}'", contextTypeName));
       }
 
       System.Reflection.ConstructorInfo constructor =
@@ -160,10 +170,11 @@ namespace Scs.Core.Builder
           constructor.Invoke(new Object[] { componentId }) as ComponentContext;
       if (component == null) {
         string errorMsg = String.Format(
-            "A classe {0} não é do tipo 'ComponentContext'", contextType);
+            "A classe {0} não é do tipo 'ComponentContext'", contextTypeName);
         throw new SCSException(errorMsg);
       }
 
+      logger.DebugFormat("Contexto criado utilizando a classe '{0}'", contextTypeName);
       return component;
     }
 
@@ -252,10 +263,36 @@ namespace Scs.Core.Builder
           "Faceta não pode ser instanciada como um objeto remoto.\n" +
           "Certifique-se que seu servantNode estenda de MarshalByRefObject");
       }
-
       return servant;
     }
 
+    /// <summary>
+    /// Faz um dump do component
+    /// </summary>    
+    /// <param name="component"></param>
+    private void DumpComponent(ComponentContext component) {
+      ComponentId componentId = component.GetComponentId();
+      StringBuilder builder = new StringBuilder();
+      builder.AppendFormat("Componente {0}:{1}.{2}.{3} criado com sucesso.\n", componentId.name,
+          componentId.major_version, componentId.minor_version, componentId.patch_version);
+
+      IDictionary<String, Facet> facets = component.GetFacets();
+      IDictionary<String, Receptacle> receptacles = component.GetReceptacles();
+
+      if (facets.Count > 0) {
+        builder.AppendLine("Facetas:");
+      }
+      foreach (Facet facet in facets.Values) {
+        builder.AppendFormat("  {0} : {1}\n", facet.Name, facet.InterfaceName);
+      }
+
+      if (receptacles.Count > 0)
+        builder.AppendLine("Receptáculos:");
+      foreach (Receptacle receptacle in receptacles.Values) {
+        builder.AppendFormat("  {0} : {1}\n", receptacle.Name, receptacle.InterfaceName);
+      }
+      logger.Info(builder.Remove(builder.Length - 1, 1));
+    }
 
     #endregion
   }

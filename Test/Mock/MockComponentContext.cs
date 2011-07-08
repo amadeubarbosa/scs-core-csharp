@@ -15,7 +15,7 @@ namespace Test.Mock
     #region ComponentContext Members
 
     public scs.core.ComponentId GetComponentId() {
-      throw new NotImplementedException();
+      return new ComponentId();
     }
 
     public scs.core.IComponent GetIComponent() {
@@ -23,7 +23,7 @@ namespace Test.Mock
     }
 
     public IDictionary<string, Facet> GetFacets() {
-      throw new NotImplementedException();
+      return new Dictionary<string, Facet>();
     }
 
     public Facet GetFacetByName(string name) {
@@ -31,7 +31,7 @@ namespace Test.Mock
     }
 
     public IDictionary<string, Receptacle> GetReceptacles() {
-      throw new NotImplementedException();
+      return new Dictionary<string, Receptacle>();
     }
 
     public Receptacle GetReceptacleByName(string name) {

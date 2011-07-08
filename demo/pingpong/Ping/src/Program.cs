@@ -14,6 +14,7 @@ namespace Server
   class Program
   {
     static void Main(string[] args) {
+      log4net.Config.XmlConfigurator.Configure();
 
       IiopChannel chan = new IiopChannel(0);
       ChannelServices.RegisterChannel(chan, false);

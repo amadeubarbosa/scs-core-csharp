@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using log4net;
 using scs.core;
 using Scs.Core.Util;
 
@@ -14,6 +15,11 @@ namespace Scs.Core.Servant
   public class IReceptaclesServant : MarshalByRefObject, IReceptacles
   {
     #region Field
+
+    /// <summary>
+    /// O log
+    /// </summary>
+    private static ILog logger = LogManager.GetLogger(typeof(Receptacle));
 
     /// <summary>
     /// O contexto do componente.
@@ -74,7 +80,10 @@ namespace Scs.Core.Servant
       if (!IiopNetUtil.CheckInterface(obj, rec.InterfaceName))
         throw new InvalidConnection();
 
-      return rec.AddConnections(obj);
+      int id = rec.AddConnections(obj);
+      logger.InfoFormat("Conexão {0} adicionada ao receptáculo '{1}'", id,
+          receptacle);
+      return id;
     }
 
     /// <summary>
@@ -95,6 +104,8 @@ namespace Scs.Core.Servant
       foreach (Receptacle receptacle in receptacles.Values) {
         Boolean removed = receptacle.RemoveConnetions(id);
         if (removed) {
+          logger.InfoFormat("Conexão {0} removida do receptáculo '{1}'", id,
+              receptacle.Name);
           return;
         }
       }
