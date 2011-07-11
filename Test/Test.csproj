@@ -77,6 +77,7 @@
     <None Include="..\ScsKey.snk">
       <Link>ScsKey.snk</Link>
     </None>
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Models\Component2.xml">

@@ -78,7 +78,6 @@ namespace Scs.Core
       }
       Facet facet = new Facet(name, interfaceName, servant);
       facets[name] = facet;
-      ObjRef activateFacet = IiopNetUtil.ActivateFacet(servant);
     }
 
     /// <see cref="UpdateFacet" />
@@ -89,14 +88,12 @@ namespace Scs.Core
     public void UpdateFacet(String name, MarshalByRefObject servant) {
       if (String.IsNullOrEmpty(name))
         throw new ArgumentException("O campo 'name' não pode ser nulo ou vazio.", "name");
-
       if (!facets.ContainsKey(name)) {
         throw new FacetDoesNotExistException(name);
       }
-      IiopNetUtil.DeactivateFacet(facets[name].Reference);
-      String interfaceName = facets[name].InterfaceName;
-      Facet facet = new Facet(name, interfaceName, servant);
-      facets[name] = facet;
+
+      Facet facet = facets[name];
+      facet.UpdateReference(servant);
     }
 
     /// <see cref="RemoveFacet" />
@@ -105,9 +102,9 @@ namespace Scs.Core
         logger.WarnFormat("Não existe a faceta '{0}' no componente.", name);
         return;
       }
-      MarshalByRefObject facetObj = facets[name].Reference;
-      IiopNetUtil.DeactivateFacet(facetObj);
+      Facet facet = facets[name];
       facets.Remove(name);
+      facet.Deactivate();
     }
 
     /// <see cref="AddReceptacle" />
@@ -181,22 +178,6 @@ namespace Scs.Core
       return receptacles[name];
     }
 
-    /// <see cref="ActivateComponent" />
-    public void ActivateComponent() {
-      foreach (Facet facet in facets.Values) {
-        MarshalByRefObject facetObj = facet.Reference;
-        IiopNetUtil.ActivateFacet(facetObj);
-      }
-    }
-
-    /// <see cref="ActivateComponent" /> 
-    public void DeactivateComponent() {
-      foreach (Facet facet in facets.Values) {
-        MarshalByRefObject facetObj = facet.Reference;
-        IiopNetUtil.DeactivateFacet(facetObj);
-      }
-    }
-
     #endregion
 
     #region Private Members
@@ -236,6 +217,59 @@ namespace Scs.Core
       }
     }
 
+    #endregion
+
+    #region Override Methods
+
+    /// <see cref="Equals" />
+    public override bool Equals(object obj) {
+      if (obj == null || GetType() != obj.GetType()) {
+        return false;
+      }
+
+      ComponentContext objContext = (ComponentContext)obj;
+      IDictionary<string, Facet> objFacets = objContext.GetFacets();
+      if (this.facets.Count != objFacets.Count)
+        return false;
+      foreach (Facet facet in this.facets.Values) {
+        if (!objFacets.ContainsKey(facet.Name))
+          return false;
+        Facet objFacet = objFacets[facet.Name];
+        if (!facet.Equals(objFacet))
+          return false;
+      }
+
+      IDictionary<string, Receptacle> objReceptacles = objContext.GetReceptacles();
+      if (this.receptacles.Count != objReceptacles.Count)
+        return false;
+      foreach (Receptacle receptacle in this.receptacles.Values) {
+        if (!objReceptacles.ContainsKey(receptacle.Name))
+          return false;
+        Receptacle objReceptacle = objReceptacles[receptacle.Name];
+        if (!receptacle.Equals(objReceptacle))
+          return false;
+      }
+
+      if (this.componentId.name != objContext.GetComponentId().name)
+        return false;
+      if (this.componentId.major_version != objContext.GetComponentId().major_version)
+        return false;
+      if (this.componentId.minor_version != objContext.GetComponentId().minor_version)
+        return false;
+      if (this.componentId.patch_version != objContext.GetComponentId().patch_version)
+        return false;
+      if (this.componentId.platform_spec != objContext.GetComponentId().platform_spec)
+        return false;
+
+      return true;
+    }
+
+    /// <see cref="GetHashCode" />
+    public override int GetHashCode() {
+      return unchecked(String.Format("{0}:{1}.{2}.{3}", componentId.name,
+          componentId.major_version, componentId.minor_version,
+          componentId.patch_version)).GetHashCode();
+    }
     #endregion
   }
 }

@@ -31,21 +31,19 @@ namespace Test
     public void buildTest1() {
       ComponentId componetId = new ComponentId("Test1", 1, 0, 0, ".Net FrameWork 3.5");
       ComponentContext expected = new DefaultComponentContext(componetId);
-      List<FacetInformation> facetInfomationList = new List<FacetInformation>();
 
-      MarshalByRefObject servant1 = new IComponentServant(expected);
-      FacetInformation facetInfo1 = new FacetInformation("IComponent_1", "IDL:scs/core/IComponent:1.0", servant1);
-      facetInfomationList.Add(facetInfo1);
-      MarshalByRefObject servant2 = new IComponentServant(expected);
-      FacetInformation facetInfo2 = new FacetInformation("IComponent_2", "IDL:scs/core/IComponent:1.0", servant2);
-      facetInfomationList.Add(facetInfo2);
-      MarshalByRefObject servant3 = new IMetaInterfaceServant(expected);
-      FacetInformation facetInfo3 = new FacetInformation("IMetaInterface_3", "IDL:scs/core/IMetaInterface:1.0", servant3);
-      facetInfomationList.Add(facetInfo3);
-
-      foreach (var facetInfo in facetInfomationList) {
-        expected.AddFacet(facetInfo.name, facetInfo.interfaceName, facetInfo.servant);
-      }
+      String name = "IComponent_1";
+      String interfaceName = "IDL:scs/core/IComponent:1.0";
+      MarshalByRefObject servant = new IComponentServant(expected);
+      expected.AddFacet(name, interfaceName, servant);
+      name = "IComponent_2";
+      interfaceName = "IDL:scs/core/IComponent:1.0";
+      servant = new IComponentServant(expected);
+      expected.AddFacet(name, interfaceName, servant);
+      name = "IMetaInterface_3";
+      interfaceName = "IDL:scs/core/IMetaInterface:1.0";
+      servant = new IMetaInterfaceServant(expected);
+      expected.AddFacet(name, interfaceName, servant);
 
       String componentModel = Resources.Component1;
       TextReader file = new StringReader(componentModel);
@@ -53,68 +51,45 @@ namespace Test
       XMLComponentBuilder target = new XMLComponentBuilder(componentInformation);
       ComponentContext actual = target.build();
 
-      Assert.AreEqual(componetId.name, actual.GetComponentId().name);
-      Assert.AreEqual(expected.GetFacets().Count, actual.GetFacets().Count);
-      Assert.AreEqual(expected.GetReceptacles().Count, actual.GetReceptacles().Count);
-
-      foreach (var facetInfo in facetInfomationList) {
-        Facet facet = actual.GetFacetByName(facetInfo.name);
-        Assert.AreEqual(facetInfo.interfaceName, facet.InterfaceName);
-      }
+      Assert.IsTrue(expected.Equals(actual));
     }
 
     [TestMethod()]
     public void buildTest2() {
       ComponentId componetId = new ComponentId("Test1", 1, 0, 0, ".Net FrameWork 3.5");
       ComponentContext expected = new DefaultComponentContext(componetId);
-      List<ReceptacleInfomation> recInformationList = new List<ReceptacleInfomation>();
 
-      ReceptacleInfomation receptacleInfo1 =
-            new ReceptacleInfomation("Receptacle1", "IDL:scs/core/IMetaInterface:1.0", false);
-      recInformationList.Add(receptacleInfo1);
-      ReceptacleInfomation receptacleInfo2 =
-            new ReceptacleInfomation("Receptacle2", "IDL:scs/core/IMetaInterface:1.0", true);
-      recInformationList.Add(receptacleInfo2);
-      ReceptacleInfomation receptacleInfo3 =
-            new ReceptacleInfomation("Receptacle3", "IDL:scs/core/IComponent:1.0", false);
-      recInformationList.Add(receptacleInfo3);
-
-      foreach (var recInfo in recInformationList) {
-        expected.AddReceptacle(recInfo.name, recInfo.interfaceName, recInfo.isMultiple);
-      }
+      String name = "Receptacle1";
+      String interfaceName = "IDL:scs/core/IMetaInterface:1.0";
+      expected.AddReceptacle(name, interfaceName, false);
+      name = "Receptacle2";
+      interfaceName = "IDL:scs/core/IMetaInterface:1.0";
+      expected.AddReceptacle(name, interfaceName, true);
+      name = "Receptacle3";
+      interfaceName = "IDL:scs/core/IComponent:1.0";
+      expected.AddReceptacle(name, interfaceName, false);
 
       String componentModel = Resources.Component5;
       TextReader file = new StringReader(componentModel);
       XmlTextReader componentInformation = new XmlTextReader(file);
       XMLComponentBuilder target = new XMLComponentBuilder(componentInformation);
-
       ComponentContext actual = target.build();
-      Assert.AreEqual(expected.GetFacets().Count, actual.GetFacets().Count);
-      Assert.AreEqual(expected.GetReceptacles().Count, actual.GetReceptacles().Count);
 
-      foreach (var recInfo in recInformationList) {
-        Receptacle receptacle = actual.GetReceptacleByName(recInfo.name);
-        Assert.AreEqual(recInfo.interfaceName, receptacle.InterfaceName);
-        Assert.AreEqual(recInfo.isMultiple, receptacle.IsMultiple);
-      }
+      Assert.IsTrue(expected.Equals(actual));
     }
 
     [TestMethod()]
     public void buildTest3() {
       ComponentId componetId = new ComponentId("Test1", 1, 0, 0, ".Net FrameWork 3.5");
       ComponentContext expected = new DefaultComponentContext(componetId);
-      List<ReceptacleInfomation> recInformationList = new List<ReceptacleInfomation>();
 
       String componentModel = Resources.Component6;
       TextReader file = new StringReader(componentModel);
       XmlTextReader componentInformation = new XmlTextReader(file);
       XMLComponentBuilder builder = new XMLComponentBuilder(componentInformation);
-      ComponentContext target = builder.build();
+      ComponentContext actual = builder.build();
 
-      int actual = target.GetFacets().Count;
-      Assert.AreEqual(3, actual);
-      actual = target.GetReceptacles().Count;
-      Assert.AreEqual(0, actual);
+      Assert.IsTrue(expected.Equals(actual));
     }
 
     [TestMethod()]
@@ -204,35 +179,5 @@ namespace Test
     public void buildTestNull1() {
       XMLComponentBuilder builder = new XMLComponentBuilder(null);
     }
-
-    #region Private Members
-
-    private struct FacetInformation
-    {
-      public String name;
-      public String interfaceName;
-      public MarshalByRefObject servant;
-
-      public FacetInformation(String name, String interfaceName, MarshalByRefObject servant) {
-        this.name = name;
-        this.interfaceName = interfaceName;
-        this.servant = servant;
-      }
-    }
-
-    private struct ReceptacleInfomation
-    {
-      public String name;
-      public String interfaceName;
-      public Boolean isMultiple;
-
-      public ReceptacleInfomation(String name, String interfaceName, Boolean isMultiple) {
-        this.name = name;
-        this.interfaceName = interfaceName;
-        this.isMultiple = isMultiple;
-      }
-    }
-
-    #endregion
   }
 }

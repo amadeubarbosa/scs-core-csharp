@@ -1,7 +1,8 @@
 ﻿using System;
-using Scs.Core.Util;
-using scs.core;
 using System.Text.RegularExpressions;
+using scs.core;
+using Scs.Core.Exception;
+using Scs.Core.Util;
 
 namespace Scs.Core
 {
@@ -62,7 +63,7 @@ namespace Scs.Core
         throw new ArgumentException("O campo 'name' não pode ser nulo ou vazio.", "name");
       if (String.IsNullOrEmpty(interfaceName))
         throw new ArgumentException("O campo 'interfaceName' não pode ser nulo ou vazio.", "interfaceName");
-      if (!checkInterface(interfaceName))
+      if (!CheckInterface(interfaceName))
         throw new ArgumentException("O campo 'interfaceName' não está de acordo com o padrão", "interfaceName");
       if (servant == null)
         throw new ArgumentNullException("servant", "O campo 'servant' não pode ser nulo.");
@@ -74,6 +75,7 @@ namespace Scs.Core
       this.name = name;
       this.interfaceName = interfaceName;
       this.reference = servant;
+      Activate();
     }
 
     #endregion
@@ -88,6 +90,24 @@ namespace Scs.Core
       return new FacetDescription(name, interfaceName, reference);
     }
 
+    /// <summary>
+    /// Define um servant. Caso já exista um servant definido, o método 
+    /// desativa o servant anterior antes de ativar o novo servant. 
+    /// </summary>
+    /// <param name="servant"></param>
+    public void UpdateReference(MarshalByRefObject servant) {
+      if (servant == null) {
+        throw new ArgumentNullException("servant", "O campo 'servant' não pode ser nulo.");
+      }
+      if (!IiopNetUtil.CheckInterface(servant, interfaceName)) {
+        string errorMsg = String.Format("O campo 'servant' não suporta a interface {0}", interfaceName);
+        throw new ArgumentException(errorMsg);
+      }
+
+      this.reference = servant;
+      Activate();
+    }
+
     #endregion
 
     #region Private Methods
@@ -97,9 +117,38 @@ namespace Scs.Core
     /// </summary>
     /// <param name="interfaceName">A interface</param>
     /// <returns></returns>
-    private bool checkInterface(string interfaceName) {
+    private bool CheckInterface(string interfaceName) {
       Regex repositoryIDMacher = new Regex(@"^IDL:[\w/]+:\d+.\d+$");
       return repositoryIDMacher.IsMatch(interfaceName);
+    }
+
+    /// <summary>
+    /// Ativa a faceta.
+    /// </summary>
+    /// <exception cref="SCSException"></exception>
+    private void Activate() {
+      try {
+        IiopNetUtil.ActivateFacet(reference);
+      }
+      catch (System.Security.SecurityException e) {
+        throw new SCSException("Falha na ativação da Faceta", e);
+      }
+      catch (System.Runtime.Remoting.RemotingException e) {
+        throw new SCSException("Falha na ativação da Faceta", e);
+      }
+    }
+
+    /// <summary>
+    /// Desativa a faceta
+    /// </summary>
+    /// <exception cref="SCSException"></exception>
+    internal void Deactivate() {
+      try {
+        IiopNetUtil.DeactivateFacet(reference);
+      }
+      catch (System.Security.SecurityException e) {
+        throw new SCSException("Falha na desativação da Faceta", e);
+      }
     }
 
     #endregion

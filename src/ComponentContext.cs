@@ -98,16 +98,5 @@ namespace Scs.Core
     /// </summary>
     /// <param name="name"></param>
     void RemoveReceptacle(String name);
-
-    /// <summary>
-    /// Ativa todas as facetas do componente no POA associado ao componente.
-    /// </summary>
-    void ActivateComponent();
-
-    /// <summary>
-    /// Desativa todas as facetas do componente. O componente mantém suas 
-    /// facetas e receptáculos.
-    /// </summary>
-    void DeactivateComponent();
   }
 }

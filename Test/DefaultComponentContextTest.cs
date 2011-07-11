@@ -266,14 +266,15 @@ namespace Test
     public void UpdateFacet1() {
       string name = typeof(IMetaInterface).Name;
       MarshalByRefObject servant = new IMetaInterfaceServant(context);
-      Facet oldFacet = context.GetFacetByName(name);
+      MarshalByRefObject oldReference = context.GetFacetByName(name).Reference;
 
       context.UpdateFacet(name, servant);
       Facet actual = context.GetFacetByName(name);
 
-      Assert.AreEqual(servant, actual.Reference);
-      Assert.AreEqual(oldFacet.Name, actual.Name);
-      Assert.AreNotEqual(oldFacet.Reference, actual.Reference);
+      string expected = context.GetFacetByName(name).Name;
+      Assert.AreEqual(expected, actual.Name);
+      Assert.AreEqual(servant, actual.Reference);      
+      Assert.AreNotEqual(oldReference, actual.Reference);
     }
 
     [TestMethod]
