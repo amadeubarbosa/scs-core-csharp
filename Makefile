@@ -2,7 +2,8 @@
 MSBUILD=msbuild /nologo
 BUILD=$(MSBUILD) /p:Configuration=Release /verbosity:minimal
 CLEAN=$(MSBUILD) /p:Configuration=Release /verbosity:minimal /target:Clean
-TEST=^"C:\Program Files\Microsoft Visual Studio 9.0\Common7\IDE\MSTest.exe"	/nologo /noresults
+_TEST="%VS90COMNTOOLS%..\IDE\MSTest.exe"
+TEST="$(_TEST)" /nologo /noresults
 
 build: build-base build-examples
 test: build run-tests
