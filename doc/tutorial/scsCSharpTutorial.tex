@@ -197,6 +197,13 @@ context.AddFacet("MyFacetName", repID, servant);
  facetas, o identificados do componente e outros dados que serão descritos na
  Seção \ref{contexto}.
 
+É importante notar que deve-se tomar grande cuidado ao atualizar
+ (\emph{UpdateFacet}) ou remover (\emph{RemoveFacet}) uma faceta. Essas ações
+ devem ser feitas apenas na fase de construção, antes que o componente esteja
+ sendo utilizado pelos clientes. Alterar as facetas fora da fase de construção
+ pode ser considerada uma mudança na identidade do componente e causar problemas
+ para os clientes que utilizam tais facetas.
+
 \subsection{Criação de Receptáculos}\label{receptaculos}
 
 Receptáculos representam dependências de interfaces (facetas), e devem ser
