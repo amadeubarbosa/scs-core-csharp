@@ -1,0 +1,460 @@
+\documentclass[12pt]{article}
+
+%% Estilos e Plug-Ins
+\usepackage{a4}
+\usepackage{times}
+\usepackage[latin1]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{color}
+\usepackage{epsfig}
+\usepackage{mwlabinputs}
+
+\setlength{\parskip}{6mm}
+\textheight=8.2in
+
+%% Redefines the label 'Listing' to ..
+\def\lstlistingname{Código}
+\lstset{inputencoding=latin1}
+\codestyle{colorful}
+%% Removes hyperlinks borders
+\hypersetup{
+  pdfborder = {0 0 0},
+}
+
+\newcommand{\code}[1]{\texttt{#1}}
+
+
+% ===================
+% Inicio do documento
+% ===================
+
+\begin{document}
+
+\title{Tutorial Básico do SCS C\#}
+\author{Tecgraf \\
+        Pontifícia Universidade Católica do Rio de Janeiro
+        (PUC-Rio)\\
+        scs-users@tecgraf.puc-rio.br}
+
+\date{2011-07-13}
+\maketitle
+
+
+\pagenumbering{arabic}
+
+\section{Introdução}\label{intro}
+
+Este documento é um tutorial básico sobre a criação de componentes no modelo SCS
+ v1.3.0. Não serão encontradas aqui explicações sobre o modelo, as quais
+ encontram-se em documentos específicos. Também não será abordado o uso de
+ serviços específicos desenvolvidos para o auxílio ao uso do modelo, como a
+ infra-estrutura de execução. Essas informações também podem ser obtidas em
+ outros documentos.
+A implementação do SCS C# versão 1.3.0 utiliza o .Net Framework 3.5 e IIOP.NET
+ 1.9.1. Este documento assume que o leitor é familiarizado a conceitos de
+ desenvolvimento de \emph{software} baseado em componentes e à terminologia
+ CORBA.
+
+\section{Inicialização do ORB e Carga da IDL do SCS}\label{ORB}
+
+Para a criação e execução do código de um componente, é necessária a
+ inicialização prévia do ORB. O IIOP.NET não implementa CORBA completamente,
+ para inicializar um ORB é necessário seguir os passos do Código~\ref{lst:init}.
+
+\begin{labeledcode}[CSharp]{init}{Criação do ORB}
+  int port = 0;
+  IiopChannel chan = new IiopChannel(port);
+  ChannelServices.RegisterChannel(chan, false);
+\end{labeledcode}
+
+A classe IiopChannel possui dois contrutores. Para criar um canal apenas cliente
+ é utilizado o construtor sem parâmetros. Já para criar um canal que aceita
+ receber requisições, é necessário utilizar o construtor que possui a porta do
+ canal como parâmetro.
+
+\section{Passos Necessários à Criação de um Componente}\label{criacao}
+
+Serão descritos os passos mínimos necessários para a criação de um componente
+ SCS.
+
+\subsection{Definição do Identificador do Componente}\label{componentid}
+
+O identificador do componente é uma estrutura definida em IDL (scs.idl) chamada
+ ComponentId, é representada por uma \emph{struct} que possui os seguintes
+ campos:
+
+\begin{itemize}
+  \item \code{name}: Nome desejado para o componente.
+  \item \code{major\_version}: Número que define a versão principal do componente.
+  \item \code{minor\_version}: Número que define a versão secundária do componente, possivelmente relacionado a uma sub-versão da versão principal.
+  \item \code{patch\_version}: Número que define a versão de revisão do componente.
+  \item \code{platform\_spec}: \emph{String} contendo quaisquer especificações de plataforma necessárias ao funcionamento do componente.
+\end{itemize}
+
+Os números de versão do componente, quando unificados, devem ser separados por
+ pontos. Ou seja, um componente com versão principal 1, versão secundária 0 e
+ versão de revisão 0 deve ser representado como a \emph{String} "1.0.0".
+
+\subsection{Criação do Componente Básico}\label{contexto}
+O componente SCS é representado pela interface \emph{ComponentContext}. A classe
+ \empth{DefaultComponentContext} é uma implementação padrão da interface, ela
+ atua como um invólucro local para as facetas e receptáculos de um componente
+ SCS.
+
+A classe \emph{DefaultComponentContext} está localizada em \emph{Scs.Core} e seu
+ processo de instanciação engloba a criação das três facetas básicas,
+ \emph{IComponent}, \emph{IReceptacles} e \emph{IMetaInterface}. Caso o usuário
+ necessite utilizar uma implementação diferente de alguma dessas facetas, basta
+ utilizar o método \empth{updateFacet}.
+
+Um exemplo de código para a criação de um componente básico pode ser visto no
+ Código~\ref{lst:create}.
+
+\begin{labeledcode}[CSharp]{create}{Instanciação de um Novo Componente}
+IiopChannel chan = new IiopChannel(0);
+ChannelServices.RegisterChannel(chan, false);
+
+ComponentId componentId = new ComponentId("MyComponent", 1, 0, 0, "");
+ComponentContext context = new DefaultComponentContext(componentId);
+\end{labeledcode}
+
+\subsection{Criação de Facetas}\label{facetas}
+
+Facetas são interfaces CORBA, e devem ser implementadas pelo desenvolvedor da
+ aplicação. O IIOP.NET obriga que as facetas implementadas tenham modificador de
+ acesso \emph{public}, estenda MarshalByRefObject e implemente a interface da
+ faceta.
+
+Um exemplo de implementação de faceta pode ser visto no Código~\ref{lst:faceta}.
+ Essa faceta precisa ter uma especificação em IDL. Para o nosso exemplo,
+ utilizaremos a IDL contida no Código~\ref{lst:idl}.
+
+\begin{labeledcode}[CSharp]{faceta}{Implementação de uma Faceta MyFacet}
+public class MyFacetServant : MarshalByRefObject, MyFacet {
+  MyFacetServant(ComponentContext context) { this.context = context }
+
+  public void myMethod() {
+    ...
+  }
+}
+\end{labeledcode}
+
+\begin{labeledcode}[idl]{idl}{Exemplo de IDL de uma Faceta}
+module mymodule{
+  interface MyFacet {
+    void myMethod();
+  };
+  interface AnotherFacet {
+    void anotherMethod();
+  };
+};
+\end{labeledcode}
+
+Para adicionar a faceta implementada acima no componente, deve-se chamar o
+ método \emph{AddFacet}, que possui como parâmetros o nome, a interface e um
+ objeto que representa a implementação da faceta. O uso desse método pode ser
+ visto no Código~\ref{lst:addFacet}.
+
+\begin{labeledcode}[CSharp]{addFacet}{Adição de uma Faceta MyFacet a um Componente}
+MarshalByRefObject servant = new MyFacet(context);
+string repID = Repository.GetRepositoryID(typeof(MyFacet));
+
+context.AddFacet("MyFacetName", repID, servant);
+\end{labeledcode}
+
+É uma boa prática que toda a faceta possua um construtor que receba o
+ \emph{ComponentContext}. Essa classe pode ser utilizada para acessar outras
+ facetas, o identificados do componente e outros dados que serão descritos na
+ Seção \ref{contexto}.
+
+\subsection{Criação de Receptáculos}\label{receptaculos}
+
+Receptáculos representam dependências de interfaces (facetas), e devem ser
+ descritos pelo desenvolvedor da aplicação, não implementados. Eles são
+ manipulados pela faceta básica \emph{IReceptacles}. Se a aplicação desejar
+ manipular seus receptáculos de forma diferente, precisará substituir a
+ implementação da faceta \emph{IReceptacles} através do método
+ \emph{updateFacet} do contexto, como descrito na Seção \ref{facetas}.
+
+A criação de receptáculos é análoga à criação de facetas, descrita na Seção
+ \ref{facetas}.
+
+Para adicionar um receptáculo ao componente, deve-se utilizar o método
+ \emph{addReceptacle}, que espera como parâmetros o nome, a interface esperada
+ e um \emph{boolean} indicando se o receptáculo deve aceitar uma ou múltiplas
+ conexões. O uso desse método pode ser visto no Código~\ref{lst:addReceptacle}.
+
+\begin{labeledcode}[CSharp]{addReceptacle}{Adição de um Receptáculo MyReceptacle a um Componente}
+context.AddReceptacle("MyReceptacleName", "IDL:mymodule/MyFacet:1.0", true)
+\end{labeledcode}
+
+\subsection{Acesso a Facetas e Receptáculos}\label{acesso}
+
+A interface \empth{ComponentContext} fornece métodos para acessar tanto as
+ facetas quanto receptáculos. Esses métodos fornecem uma coleção de metadados
+ sobre a faceta ou receptáculo. Exemplos são fornecidos no
+ Código~\ref{lst:getters}.
+
+\begin{labeledcode}[Csharp]{getters}{Métodos de Acesso a Facetas e Receptáculos}
+Facet facet = context.GetFacetByName("MyFacetName");
+var facets = context.GetFacets();
+Receptacle receptacle = context.GetReceptacleByName("MyReceptacleName");
+var receptacles = context.GetReceptacles();
+\end{labeledcode}
+
+A classe \emph{Facet} que possui os metadados de uma faceta, contém as seguintes
+ informações:
+
+\begin{itemize}
+  \item \code{Name}: Nome da faceta, fornecido pelo usuário. Atua como o identificador único da faceta dentro do componente.
+  \item \code{InterfaceName}: A interface IDL da faceta, fornecida pelo usuário.
+  \item \code{Reference}: O objeto CORBA que representa a faceta.
+\end{itemize}
+
+Um exemplo de como acessar outras facetas de dentro da implementação de uma
+ faceta pode ser visto no Código~\ref{lst:faceta2}. O exemplo espera que a
+ faceta possua uma referência para o \emph{ComponentContext}, como foi visto no
+ Código~\ref{lst:faceta}.
+
+\begin{labeledcode}[Csharp]{faceta2}{Acesso a Outras Facetas de Dentro de Um Método de Faceta}
+...
+public void myMethod() {
+  Facet anotherFacet = this.context.GetFacetByName("AnotherFacetName");
+  anotherFacet.anotherMethod();
+}
+...
+\end{labeledcode}
+
+A classe \empth{Receptacle} que possui os metadados de um receptáculo, contém as
+ seguintes informações:
+
+\begin{itemize}
+  \item \code{Name}: Nome do receptáculo. Atua como o identificador único do receptáculo dentro do componente.
+  \item \code{InterfaceName}: A interface IDL esperada pelo receptáculo.
+  \item \code{isMultiple}: \emph{Boolean} indicando se o receptáculo aceita múltiplas conexões.
+  \item \code{GetConnections()}: Lista de conexões desse receptáculo.
+\end{itemize}
+
+
+\subsection{Builders}\label{builders}
+Em todos os exemplos anteriores, a definição e "montagem" do componente
+ (adição de facetas e receptáculos) é feita dentro do código fonte. Isso
+ significa que, caso seja necessária alguma mudança nessa configuração, o
+ código-fonte precisa ser alterado. É fácil perceber que essa configuração do
+ componente pode ser definida externamente, permitindo alterações sem a
+ necessidade de mudanças no código-fonte.
+
+Além disso, serviços de mais alto nível podem se beneficiar de descrições em uma
+ linguagem declarativa qualquer, para realizar a implantação automática de
+ componentes num domínio. Administradores de sistema, sem um conhecimento maior
+ sobre o desenvolvimento de componentes de \emph{software}, podem alterar a
+ configuração de aplicações sem a necessidade da intervenção de um programador.
+
+Para facilitar esse processo de externalização da configuração do componente, o
+ SCS utiliza o conceito de \emph{builders}. \emph{Builders} são pequenas
+ bibliotecas que lêem uma descrição de um componente em uma linguagem
+ específica, interpretam os dados para criar um componente de acordo com a
+ configuração desejada. O SCS C# já fornece um \emph{builder} para a linguagem
+ XML.
+
+\subsubsection{XMLComponentBuilder}\label{xml}
+
+O \emph{XMLComponentBuilder} interpreta um arquivo XML com a descrição de um
+ componente e retorna um componente pronto para o uso. É possível especificar
+ facetas, receptáculos, o identificador do componente e a implementação do
+ contexto a ser usada. O Código~\ref{lst:xml} mostra um XML de exemplo, enquanto
+ que o Código~\ref{lst:xmlbuilder} demonstra como utilizar o
+ \emph{XMLComponentBuilder}.
+
+O \emph{XMLComponentBuilder} procura, por meio de reflexão, a classe que
+ implementa a faceta, utilizando o nome
+Para obter a classe que implementa a facetas descrita, o elemento facetImpl e o
+ atributo assembly.
+
+O SCS fornece em seu pacote de distribuição um arquivo chamado
+ \emph{ComponentDescription.xsd} que contém o \emph{schema} utilizado pelo
+ XMLComponentBuilder.
+
+\begin{labeledcode}[xml]{xml}{Arquivo XML Definindo um Componente}
+<?xml version="1.0" encoding="utf-8" ?>
+
+<scs:component xmlns:scs="tecgraf.scs.core"
+           xmlns:xi="http://www.w3.org/2001/XMLSchema-instance">
+  <id>
+    <name>Hello</name>
+    <version>1.0.0</version>
+    <platformSpec>.Net FrameWork 3.5</platformSpec>
+  </id>
+  <facets>
+    <facet>
+      <name>Hello</name>
+      <interfaceName>IDL:scs/demos/helloworld/Hello:1.0</interfaceName>
+      <facetImpl assembly="HelloServer">Server.HelloServant</facetImpl>
+    </facet>
+  </facets>
+</scs:component>
+\end{labeledcode}
+
+\begin{labeledcode}[CSharp]{xmlbuilder}{Exemplo de uso do XMLComponentBuilder}
+XmlTextReader componentInformation = new XmlTextReader(file);
+XMLComponentBuilder builder = new XMLComponentBuilder(componentInformation);
+ComponentContext context = builder.build();
+\end{labeledcode}
+
+
+\section{Exemplo Completo}\label{exemplo}
+
+Demonstraremos aqui o uso mais simples de um componente: apenas uma faceta
+ além das três facetas básicas. Não será criado nenhum receptáculo, apesar da
+ existência da faceta \emph{IReceptacles}. Esta demonstração será baseada na
+ demo \emph{Hello}, e exemplos mais complexos poderão ser encontrados nas outras
+ demos do projeto.
+
+O componente \emph{Hello} oferece quatro interfaces: \emph{IComponent},
+ \emph{IReceptacles}, \emph{IMetaInterface} e \emph{IHello}, apenas a última
+ faceta é própria do demo. Sua IDL está disponível no Código~\ref{lst:helloidl}.
+
+\begin{labeledcode}[idl]{helloidl}{IDL do Componente Hello}
+module scs{
+  module demos{
+    module helloworld {
+      interface Hello {
+        void sayHello();
+      };
+    };
+  };
+};
+\end{labeledcode}
+
+O Código~\ref{lst:hellomain} implementa a faceta \emph{IHello}, que conta com
+ apenas um método, \emph{sayHello}. Além disso, realiza a criação do componente.
+ O código utiliza o builder \emph{XMLComponentBuilder} onde o xml pode ser visto
+ no Código~\ref{lst:helloidl}.
+
+\begin{labeledcode}[Csharp]{hellomain}{Criação do Componente Hello}
+static void Main(string[] args) {
+  IiopChannel chan = new IiopChannel(0);
+  ChannelServices.RegisterChannel(chan, false);
+
+  String componentModel = Resources.ComponentDesc;
+  TextReader file = new StringReader(componentModel);
+  XmlTextReader componentInformation = new XmlTextReader(file);
+  XMLComponentBuilder builder = new XMLComponentBuilder(componentInformation);
+  ComponentContext context = builder.build();
+
+  //Escrevendo a IOR do IComponent no arquivo.
+  IComponent component = context.GetIComponent();
+  OrbServices orb = OrbServices.GetSingleton();
+  String ior = orb.object_to_string(component);
+
+  String iorPath = Resources.IorFilename;
+  StreamWriter stream = new StreamWriter(iorPath);
+  try {
+    stream.Write(ior);
+  }
+  finally {
+    stream.Close();
+  }
+}
+\end{labeledcode}
+
+Por fim, temos o código "cliente", que acessa o componente. Note que esse
+ código pode ser CORBA puro, não é necessária a criação de um componente para
+ acessar outro componente. Um exemplo de código pode ser visto no
+ Código~\ref{lst:helloclient}.
+
+\begin{labeledcode}[CSharp]{helloclient}{Utilização do Componente Hello}
+static void Main(string[] args) {
+  IiopChannel chan = new IiopChannel();
+  ChannelServices.RegisterChannel(chan, false);
+
+  String helloIorPath = Resources.IorFilename;
+  StreamReader stream = new StreamReader(helloIorPath);
+  String helloIor;
+  try {
+    helloIor = stream.ReadToEnd();
+  }
+  finally {
+    stream.Close();
+  }
+
+  OrbServices orb = OrbServices.GetSingleton();
+  IComponent icomponent = orb.string_to_object(helloIor) as IComponent;
+  Hello hello = icomponent.getFacetByName("Hello") as Hello;
+  hello.sayHello();
+}
+\end{labeledcode}
+
+Neste exemplo, a mensagem "Hello User!" será exibida somente na máquina
+ servidor. O código cliente apenas terá a chamada \emph{sayHello()} completada
+ corretamente e será finalizado sem erros.
+
+\section{Elementos Adicionais da API do SCS}\label{adicionais}
+
+As seções anteriores descreveram o uso mais comum do SCS para o desenvolvimento
+ de aplicações baseadas em componentes. No entanto, alguns tópicos e
+ funcionalidades adicionais merecem destaque. Nesta seção descreveremos os mais
+ importantes, que podem ser necessários em aplicações ligeiramente mais
+ complexas que o código apresentado anteriormente.
+
+\subsubsection{Extensão do Contexto}\label{extcontexto}
+
+Em particular, a classe \emph{DefaultComponentContext} pode ser usada para
+ guardar o estado do componente como um todo, armazenando informações que sejam
+ úteis para mais de uma faceta. Para adicionar informações do estado do
+ componente, o usuário pode optar por estender o \emph{DefaultComponentContext}
+ ou implementar a interface \emph{ComponentContext} e utilizar a classe
+ \emph{DefaultComponentContext} para delegar os métodos que não necessite
+ reimplementar.
+
+\subsubsection{Extensão de Facetas}\label{extfaceta}
+
+É possível encontrar necessidade de estender classes que implementam facetas.
+ Por exemplo, a faceta \emph{IComponent}, contém métodos para gerenciar o ciclo
+ de vida do componente, chamados \emph{startup} e \emph{shutdown}. Como a lógica
+ desses métodos deve ficar a cargo do desenvolvedor da aplicação, suas
+ implementações padrão são vazias. O Código~\ref{lst:ciclodevida} serve de
+ exemplo.
+
+\begin{labeledcode}[CSharp]{ciclodevida}{Extensão da Faceta IComponent}
+static void Main(string[] args) {
+...
+  string iComponentName = typeof(IComponent).Name;
+  MarshalByRefObject iComponentServant = new MyIComponent(new IComponentServant(context));
+  context.UpdateFacet(iComponentName, iComponentServant);
+...
+}
+
+public class MyIComponent : MarshalByRefObject, IComponent  {
+    private IComponent iComponent;
+
+    public MyIComponent(IComponent iComponent) {
+      this.iComponent = iComponent;
+    }
+
+    public ComponentId getComponentId() {
+      return iComponent.getComponentId();
+    }
+
+    public MarshalByRefObject getFacet(string facet_interface) {
+      return iComponent.getFacet(facet_interface);
+    }
+
+    public MarshalByRefObject getFacetByName(string facet) {
+      return iComponent.getFacetByName(facet);
+    }
+
+    public void startup() {
+      ....
+    }
+
+    public void shutdown() {
+      ...
+    }
+}
+\end{labeledcode}
+
+\end{document}
