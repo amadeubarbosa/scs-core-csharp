@@ -24,6 +24,35 @@
   pdfborder = {0 0 0},
 }
 
+\lstdefinelanguage{CSharp}
+{
+ morecomment = [l]{//},
+ morecomment = [l]{///},
+ morecomment = [s]{/*}{*/},
+ morestring=[b]",
+ sensitive = true,
+ morekeywords = {abstract,  event,  new,  struct,
+   as,  explicit,  null,  switch,
+   base,  extern,  object,  this,
+   bool,  false,  operator,  throw,
+   break,  finally,  out,  true,
+   byte,  fixed,  override,  try,
+   case,  float,  params,  typeof,
+   catch,  for,  private,  uint,
+   char,  foreach,  protected,  ulong,
+   checked,  goto,  public,  unchecked,
+   class,  if,  readonly,  unsafe,
+   const,  implicit,  ref,  ushort,
+   continue,  in,  return,  using,
+   decimal,  int,  sbyte,  virtual,
+   default,  interface,  sealed,  volatile,
+   delegate,  internal,  short,  void,
+   do,  is,  sizeof,  while,
+   double,  lock,  stackalloc,
+   else,  long,  static,
+   enum,  namespace,  string}
+}
+
 \newcommand{\code}[1]{\texttt{#1}}
 
 
@@ -53,7 +82,7 @@ Este documento é um tutorial básico sobre a criação de componentes no modelo SCS
  serviços específicos desenvolvidos para o auxílio ao uso do modelo, como a
  infra-estrutura de execução. Essas informações também podem ser obtidas em
  outros documentos.
-A implementação do SCS C# versão 1.3.0 utiliza o .Net Framework 3.5 e IIOP.NET
+A implementação do SCS C\# versão 1.3.0 utiliza o .Net Framework 3.5 e IIOP.NET
  1.9.1. Este documento assume que o leitor é familiarizado a conceitos de
  desenvolvimento de \emph{software} baseado em componentes e à terminologia
  CORBA.
@@ -70,10 +99,10 @@ Para a criação e execução do código de um componente, é necessária a
   ChannelServices.RegisterChannel(chan, false);
 \end{labeledcode}
 
-A classe IiopChannel possui dois contrutores. Para criar um canal apenas cliente
- é utilizado o construtor sem parâmetros. Já para criar um canal que aceita
- receber requisições, é necessário utilizar o construtor que possui a porta do
- canal como parâmetro.
+A classe IiopChannel possui dois construtores. Para criar um canal apenas
+ cliente é utilizado o construtor sem parâmetros. Já para criar um canal que
+ aceita receber requisições, é necessário utilizar o construtor que possui a
+ porta do canal como parâmetro.
 
 \section{Passos Necessários à Criação de um Componente}\label{criacao}
 
@@ -100,7 +129,7 @@ Os números de versão do componente, quando unificados, devem ser separados por
 
 \subsection{Criação do Componente Básico}\label{contexto}
 O componente SCS é representado pela interface \emph{ComponentContext}. A classe
- \empth{DefaultComponentContext} é uma implementação padrão da interface, ela
+ \emph{DefaultComponentContext} é uma implementação padrão da interface, ela
  atua como um invólucro local para as facetas e receptáculos de um componente
  SCS.
 
@@ -108,7 +137,7 @@ A classe \emph{DefaultComponentContext} está localizada em \emph{Scs.Core} e seu
  processo de instanciação engloba a criação das três facetas básicas,
  \emph{IComponent}, \emph{IReceptacles} e \emph{IMetaInterface}. Caso o usuário
  necessite utilizar uma implementação diferente de alguma dessas facetas, basta
- utilizar o método \empth{updateFacet}.
+ utilizar o método \emph{updateFacet}.
 
 Um exemplo de código para a criação de um componente básico pode ser visto no
  Código~\ref{lst:create}.
@@ -193,7 +222,7 @@ context.AddReceptacle("MyReceptacleName", "IDL:mymodule/MyFacet:1.0", true)
 
 \subsection{Acesso a Facetas e Receptáculos}\label{acesso}
 
-A interface \empth{ComponentContext} fornece métodos para acessar tanto as
+A interface \emph{ComponentContext} fornece métodos para acessar tanto as
  facetas quanto receptáculos. Esses métodos fornecem uma coleção de metadados
  sobre a faceta ou receptáculo. Exemplos são fornecidos no
  Código~\ref{lst:getters}.
@@ -228,7 +257,7 @@ public void myMethod() {
 ...
 \end{labeledcode}
 
-A classe \empth{Receptacle} que possui os metadados de um receptáculo, contém as
+A classe \emph{Receptacle} que possui os metadados de um receptáculo, contém as
  seguintes informações:
 
 \begin{itemize}
@@ -257,7 +286,7 @@ Para facilitar esse processo de externalização da configuração do componente, o
  SCS utiliza o conceito de \emph{builders}. \emph{Builders} são pequenas
  bibliotecas que lêem uma descrição de um componente em uma linguagem
  específica, interpretam os dados para criar um componente de acordo com a
- configuração desejada. O SCS C# já fornece um \emph{builder} para a linguagem
+ configuração desejada. O SCS C\# já fornece um \emph{builder} para a linguagem
  XML.
 
 \subsubsection{XMLComponentBuilder}\label{xml}
