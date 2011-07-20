@@ -19,6 +19,7 @@
 \def\lstlistingname{Código}
 \lstset{inputencoding=latin1}
 \codestyle{colorful}
+\bibliographystyle{acm}
 %% Removes hyperlinks borders
 \hypersetup{
   pdfborder = {0 0 0},
@@ -77,15 +78,15 @@
 \section{Introdução}\label{intro}
 
 Este documento é um tutorial básico sobre a criação de componentes no modelo SCS
- v1.3.0. Não serão encontradas aqui explicações sobre o modelo, as quais
- encontram-se em documentos específicos. Também não será abordado o uso de
+ v1.3.0\cite{SCS}. Não serão encontradas aqui explicações sobre o modelo, as
+ quais encontram-se em documentos específicos. Também não será abordado o uso de
  serviços específicos desenvolvidos para o auxílio ao uso do modelo, como a
  infra-estrutura de execução. Essas informações também podem ser obtidas em
  outros documentos.
-A implementação do SCS C\# versão 1.3.0 utiliza o .Net Framework 3.5 e IIOP.NET
- 1.9.1. Este documento assume que o leitor é familiarizado a conceitos de
- desenvolvimento de \emph{software} baseado em componentes e à terminologia
- CORBA.
+A implementação do SCS C\# versão 1.3.0 utiliza o .Net
+ Framework 3.5\cite{NETFRAMEWORK} e IIOP.NET\cite{IIOPNET} 1.9.1. Este documento
+ assume que o leitor é familiarizado a conceitos de desenvolvimento de
+ \emph{software} baseado em componentes e à terminologia CORBA\cite{CORBA}.
 
 \section{Inicialização do ORB e Carga da IDL do SCS}\label{ORB}
 
@@ -94,7 +95,7 @@ Para a criação e execução do código de um componente, é necessária a
  para inicializar um ORB é necessário seguir os passos do Código~\ref{lst:init}.
 
 \begin{labeledcode}[CSharp]{init}{Criação do ORB}
-  int port = 0;
+  int port = ...
   IiopChannel chan = new IiopChannel(port);
   ChannelServices.RegisterChannel(chan, false);
 \end{labeledcode}
@@ -137,16 +138,13 @@ A classe \emph{DefaultComponentContext} está localizada em \emph{Scs.Core} e seu
  processo de instanciação engloba a criação das três facetas básicas,
  \emph{IComponent}, \emph{IReceptacles} e \emph{IMetaInterface}. Caso o usuário
  necessite utilizar uma implementação diferente de alguma dessas facetas, basta
- utilizar o método \emph{updateFacet}.
+ utilizar o método \emph{updateFacet} que será explicado adiante.
 
 Um exemplo de código para a criação de um componente básico pode ser visto no
  Código~\ref{lst:create}.
 
 \begin{labeledcode}[CSharp]{create}{Instanciação de um Novo Componente}
-IiopChannel chan = new IiopChannel(0);
-ChannelServices.RegisterChannel(chan, false);
-
-ComponentId componentId = new ComponentId("MyComponent", 1, 0, 0, "");
+ComponentId componentId = new ComponentId("MyComponent", 1, 0, 0, ".NET Framework");
 ComponentContext context = new DefaultComponentContext(componentId);
 \end{labeledcode}
 
@@ -299,9 +297,8 @@ O \emph{XMLComponentBuilder} interpreta um arquivo XML com a descrição de um
  \emph{XMLComponentBuilder}.
 
 O \emph{XMLComponentBuilder} procura, por meio de reflexão, a classe que
- implementa a faceta, utilizando o nome
-Para obter a classe que implementa a facetas descrita, o elemento facetImpl e o
- atributo assembly.
+ implementa a faceta. O mecanismo utiliza o valor do elemento facetImpl e do
+ atributo assembly para identificar a classe descrita no XML.
 
 O SCS fornece em seu pacote de distribuição um arquivo chamado
  \emph{ComponentDescription.xsd} que contém o \emph{schema} utilizado pelo
@@ -309,7 +306,6 @@ O SCS fornece em seu pacote de distribuição um arquivo chamado
 
 \begin{labeledcode}[xml]{xml}{Arquivo XML Definindo um Componente}
 <?xml version="1.0" encoding="utf-8" ?>
-
 <scs:component xmlns:scs="tecgraf.scs.core"
            xmlns:xi="http://www.w3.org/2001/XMLSchema-instance">
   <id>
@@ -360,8 +356,8 @@ module scs{
 
 O Código~\ref{lst:hellomain} implementa a faceta \emph{IHello}, que conta com
  apenas um método, \emph{sayHello}. Além disso, realiza a criação do componente.
- O código utiliza o builder \emph{XMLComponentBuilder} onde o xml pode ser visto
- no Código~\ref{lst:helloidl}.
+ O código utiliza o builder \emph{XMLComponentBuilder}. O XML pode ser visto no
+ Código~\ref{lst:xml}.
 
 \begin{labeledcode}[Csharp]{hellomain}{Criação do Componente Hello}
 static void Main(string[] args) {
@@ -485,5 +481,7 @@ public class MyIComponent : MarshalByRefObject, IComponent  {
     }
 }
 \end{labeledcode}
+
+\bibliography{bibliografia}
 
 \end{document}
