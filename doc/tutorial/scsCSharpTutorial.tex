@@ -84,7 +84,7 @@ Este documento é um tutorial básico sobre a criação de componentes no modelo SCS
  infra-estrutura de execução. Essas informações também podem ser obtidas em
  outros documentos.
 A implementação do SCS C\# versão 1.3.0 utiliza o .Net
- Framework 3.5\cite{NETFRAMEWORK} e IIOP.NET\cite{IIOPNET} 1.9.1. Este documento
+ Framework 3.5\cite{NETFRAMEWORK} e IIOP.NET 1.9.1\cite{IIOPNET}. Este documento
  assume que o leitor é familiarizado a conceitos de desenvolvimento de
  \emph{software} baseado em componentes e à terminologia CORBA\cite{CORBA}.
 
@@ -113,7 +113,7 @@ Serão descritos os passos mínimos necessários para a criação de um componente
 \subsection{Definição do Identificador do Componente}\label{componentid}
 
 O identificador do componente é uma estrutura definida em IDL (scs.idl) chamada
- ComponentId, é representada por uma \emph{struct} que possui os seguintes
+ ComponentId e é representada por uma \emph{struct} que possui os seguintes
  campos:
 
 \begin{itemize}
@@ -138,7 +138,7 @@ A classe \emph{DefaultComponentContext} está localizada em \emph{Scs.Core} e seu
  processo de instanciação engloba a criação das três facetas básicas,
  \emph{IComponent}, \emph{IReceptacles} e \emph{IMetaInterface}. Caso o usuário
  necessite utilizar uma implementação diferente de alguma dessas facetas, basta
- utilizar o método \emph{updateFacet} que será explicado adiante.
+ utilizar o método \emph{UpdateFacet}.
 
 Um exemplo de código para a criação de um componente básico pode ser visto no
  Código~\ref{lst:create}.
@@ -180,10 +180,10 @@ module mymodule{
 };
 \end{labeledcode}
 
-Para adicionar a faceta implementada acima no componente, deve-se chamar o
- método \emph{AddFacet}, que possui como parâmetros o nome, a interface e um
- objeto que representa a implementação da faceta. O uso desse método pode ser
- visto no Código~\ref{lst:addFacet}.
+Para adicionar a faceta implementada no Código~\ref{lst:faceta}, no componente,
+ deve-se chamar o método \emph{AddFacet}, que possui como parâmetros o nome, a
+ interface e um objeto que representa a implementação da faceta. O uso desse
+ método pode ser visto no Código~\ref{lst:addFacet}.
 
 \begin{labeledcode}[CSharp]{addFacet}{Adição de uma Faceta MyFacet a um Componente}
 MarshalByRefObject servant = new MyFacet(context);
@@ -211,15 +211,14 @@ Receptáculos representam dependências de interfaces (facetas), e devem ser
  manipulados pela faceta básica \emph{IReceptacles}. Se a aplicação desejar
  manipular seus receptáculos de forma diferente, precisará substituir a
  implementação da faceta \emph{IReceptacles} através do método
- \emph{updateFacet} do contexto, como descrito na Seção \ref{facetas}.
+ \emph{UpdateFacet} do contexto, como descrito na Seção \ref{facetas}.
 
 A criação de receptáculos é análoga à criação de facetas, descrita na Seção
- \ref{facetas}.
-
-Para adicionar um receptáculo ao componente, deve-se utilizar o método
- \emph{addReceptacle}, que espera como parâmetros o nome, a interface esperada
- e um \emph{boolean} indicando se o receptáculo deve aceitar uma ou múltiplas
- conexões. O uso desse método pode ser visto no Código~\ref{lst:addReceptacle}.
+ \ref{facetas}. Para adicionar um receptáculo ao componente, deve-se utilizar o
+ método \emph{AddReceptacle}, que espera como parâmetros o nome, a interface
+ esperada e um \emph{boolean} indicando se o receptáculo deve aceitar uma ou
+ múltiplas conexões. O uso desse método pode ser visto no
+ Código~\ref{lst:addReceptacle}.
 
 \begin{labeledcode}[CSharp]{addReceptacle}{Adição de um Receptáculo MyReceptacle a um Componente}
 context.AddReceptacle("MyReceptacleName", "IDL:mymodule/MyFacet:1.0", true)
@@ -273,7 +272,7 @@ A classe \emph{Receptacle} que possui os metadados de um receptáculo, contém as
 \end{itemize}
 
 
-\subsection{Builders}\label{builders}
+\section{Builders}\label{builders}
 Em todos os exemplos anteriores, a definição e "montagem" do componente
  (adição de facetas e receptáculos) é feita dentro do código fonte. Isso
  significa que, caso seja necessária alguma mudança nessa configuração, o
@@ -294,7 +293,7 @@ Para facilitar esse processo de externalização da configuração do componente, o
  configuração desejada. O SCS C\# já fornece um \emph{builder} para a linguagem
  XML.
 
-\subsubsection{XMLComponentBuilder}\label{xml}
+\subsection{XMLComponentBuilder}\label{xml}
 
 O \emph{XMLComponentBuilder} interpreta um arquivo XML com a descrição de um
  componente e retorna um componente pronto para o uso. É possível especificar
@@ -303,9 +302,10 @@ O \emph{XMLComponentBuilder} interpreta um arquivo XML com a descrição de um
  que o Código~\ref{lst:xmlbuilder} demonstra como utilizar o
  \emph{XMLComponentBuilder}.
 
-O \emph{XMLComponentBuilder} procura, por meio de reflexão, a classe que
- implementa a faceta. O mecanismo utiliza o valor do elemento facetImpl e do
- atributo assembly para identificar a classe descrita no XML.
+O \emph{XMLComponentBuilder} procura, por meio de reflexão, as classes que
+ implementam as facetas. O mecanismo utiliza o valor do elemento
+ \emph{facetImpl} e do atributo \emph{assembly} para identificar a classe
+ descrita no XML.
 
 O SCS fornece em seu pacote de distribuição um arquivo chamado
  \emph{ComponentDescription.xsd} que contém o \emph{schema} utilizado pelo
@@ -361,9 +361,8 @@ module scs{
 };
 \end{labeledcode}
 
-O Código~\ref{lst:hellomain} implementa a faceta \emph{IHello}, que conta com
- apenas um método, \emph{sayHello}. Além disso, realiza a criação do componente.
- O código utiliza o builder \emph{XMLComponentBuilder}. O XML pode ser visto no
+O Código~\ref{lst:hellomain} utiliza o \emph{XMLComponentBuilder} para realizar
+ a criação do componente. O XML utilizado pode ser visto no
  Código~\ref{lst:xml}.
 
 \begin{labeledcode}[Csharp]{hellomain}{Criação do Componente Hello}
@@ -432,7 +431,7 @@ As seções anteriores descreveram o uso mais comum do SCS para o desenvolvimento
  importantes, que podem ser necessários em aplicações ligeiramente mais
  complexas que o código apresentado anteriormente.
 
-\subsubsection{Extensão do Contexto}\label{extcontexto}
+\subsection{Extensão do Contexto}\label{extcontexto}
 
 Em particular, a classe \emph{DefaultComponentContext} pode ser usada para
  guardar o estado do componente como um todo, armazenando informações que sejam
@@ -442,14 +441,17 @@ Em particular, a classe \emph{DefaultComponentContext} pode ser usada para
  \emph{DefaultComponentContext} para delegar os métodos que não necessite
  reimplementar.
 
-\subsubsection{Extensão de Facetas}\label{extfaceta}
+\subsection{Extensão de Facetas}\label{extfaceta}
 
-É possível encontrar necessidade de estender classes que implementam facetas.
- Por exemplo, a faceta \emph{IComponent}, contém métodos para gerenciar o ciclo
- de vida do componente, chamados \emph{startup} e \emph{shutdown}. Como a lógica
- desses métodos deve ficar a cargo do desenvolvedor da aplicação, suas
- implementações padrão são vazias. O Código~\ref{lst:ciclodevida} serve de
- exemplo.
+É possível encontrar necessidade de estender classes que implementam facetas
+ básicas. Por exemplo, a faceta \emph{IComponent}, contém métodos para gerenciar
+ o ciclo de vida do componente, chamados \emph{startup} e \emph{shutdown}. Como
+ a lógica desses métodos deve ficar a cargo do desenvolvedor da aplicação, suas
+ implementações padrão são vazias. Como pode ser visto no
+ Código~\ref{lst:ciclodevida}, para que o componente utilize a faceta
+ implementada pelo usuário, é necessário chamar o método \emph{UpdateFacet}
+ visto que o construtor do \emph{DefaultComponentContext} já inicializa as três
+ facetas básicas.
 
 \begin{labeledcode}[CSharp]{ciclodevida}{Extensão da Faceta IComponent}
 static void Main(string[] args) {
