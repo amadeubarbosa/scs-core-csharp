@@ -76,8 +76,8 @@
     <Compile Include="src\Util\IiopNetUtil.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\schema\trunk\ComponentDescription.xsd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Include="..\..\..\schema\tags\SCS_CORE_SCHEMA_v1_02_00_00_2011_07_29\ComponentDescription.xsd">
+      <Link>ComponentDescription.xsd</Link>
     </None>
     <None Include="ScsKey.snk" />
   </ItemGroup>
