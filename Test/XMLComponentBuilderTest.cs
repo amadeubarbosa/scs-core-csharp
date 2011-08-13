@@ -48,7 +48,7 @@ namespace Test
       String componentModel = Resources.Component1;
       TextReader file = new StringReader(componentModel);
       XmlTextReader componentInformation = new XmlTextReader(file);
-      XMLComponentBuilder target = new XMLComponentBuilder(componentInformation);
+      XmlComponentBuilder target = new XmlComponentBuilder(componentInformation);
       ComponentContext actual = target.build();
 
       Assert.IsTrue(expected.Equals(actual));
@@ -72,7 +72,7 @@ namespace Test
       String componentModel = Resources.Component5;
       TextReader file = new StringReader(componentModel);
       XmlTextReader componentInformation = new XmlTextReader(file);
-      XMLComponentBuilder target = new XMLComponentBuilder(componentInformation);
+      XmlComponentBuilder target = new XmlComponentBuilder(componentInformation);
       ComponentContext actual = target.build();
 
       Assert.IsTrue(expected.Equals(actual));
@@ -86,7 +86,7 @@ namespace Test
       String componentModel = Resources.Component6;
       TextReader file = new StringReader(componentModel);
       XmlTextReader componentInformation = new XmlTextReader(file);
-      XMLComponentBuilder builder = new XMLComponentBuilder(componentInformation);
+      XmlComponentBuilder builder = new XmlComponentBuilder(componentInformation);
       ComponentContext actual = builder.build();
 
       Assert.IsTrue(expected.Equals(actual));
@@ -100,7 +100,7 @@ namespace Test
       String componentModel = Resources.Component7;
       TextReader file = new StringReader(componentModel);
       XmlTextReader componentInformation = new XmlTextReader(file);
-      XMLComponentBuilder builder = new XMLComponentBuilder(componentInformation);
+      XmlComponentBuilder builder = new XmlComponentBuilder(componentInformation);
       ComponentContext target = builder.build();
 
       Assert.IsInstanceOfType(target, typeof(MockComponentContext));
@@ -115,7 +115,7 @@ namespace Test
       String componentModel = Resources.Component8;
       TextReader file = new StringReader(componentModel);
       XmlTextReader componentInformation = new XmlTextReader(file);
-      XMLComponentBuilder builder = new XMLComponentBuilder(componentInformation);
+      XmlComponentBuilder builder = new XmlComponentBuilder(componentInformation);
       ComponentContext target = builder.build();
     }
 
@@ -125,7 +125,7 @@ namespace Test
       String componentModel = Resources.Component2;
       TextReader file = new StringReader(componentModel);
       XmlTextReader componentInformation = new XmlTextReader(file);
-      XMLComponentBuilder target = new XMLComponentBuilder(componentInformation);
+      XmlComponentBuilder target = new XmlComponentBuilder(componentInformation);
 
       ComponentContext actual = target.build();
     }
@@ -136,7 +136,7 @@ namespace Test
       String componentModel = Resources.Component3;
       TextReader file = new StringReader(componentModel);
       XmlTextReader componentInformation = new XmlTextReader(file);
-      XMLComponentBuilder target = new XMLComponentBuilder(componentInformation);
+      XmlComponentBuilder target = new XmlComponentBuilder(componentInformation);
 
       ComponentContext actual = target.build();
     }
@@ -147,7 +147,7 @@ namespace Test
       String componentModel = Resources.Component10;
       TextReader file = new StringReader(componentModel);
       XmlTextReader componentInformation = new XmlTextReader(file);
-      XMLComponentBuilder target = new XMLComponentBuilder(componentInformation);
+      XmlComponentBuilder target = new XmlComponentBuilder(componentInformation);
 
       ComponentContext actual = target.build();
     }
@@ -158,7 +158,7 @@ namespace Test
       String componentModel = Resources.Component4;
       TextReader file = new StringReader(componentModel);
       XmlTextReader componentInformation = new XmlTextReader(file);
-      XMLComponentBuilder target = new XMLComponentBuilder(componentInformation);
+      XmlComponentBuilder target = new XmlComponentBuilder(componentInformation);
 
       ComponentContext actual = target.build();
     }
@@ -169,7 +169,7 @@ namespace Test
       String componentModel = Resources.Component9;
       TextReader file = new StringReader(componentModel);
       XmlTextReader componentInformation = new XmlTextReader(file);
-      XMLComponentBuilder target = new XMLComponentBuilder(componentInformation);
+      XmlComponentBuilder target = new XmlComponentBuilder(componentInformation);
 
       ComponentContext actual = target.build();
     }
@@ -177,7 +177,7 @@ namespace Test
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
     public void buildTestNull1() {
-      XMLComponentBuilder builder = new XMLComponentBuilder(null);
+      XmlComponentBuilder builder = new XmlComponentBuilder(null);
     }
   }
 }

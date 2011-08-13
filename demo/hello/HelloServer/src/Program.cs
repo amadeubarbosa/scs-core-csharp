@@ -22,7 +22,7 @@ namespace Server
       String componentModel = Resources.ComponentDesc;
       TextReader file = new StringReader(componentModel);
       XmlTextReader componentInformation = new XmlTextReader(file);
-      XMLComponentBuilder builder = new XMLComponentBuilder(componentInformation);
+      XmlComponentBuilder builder = new XmlComponentBuilder(componentInformation);
       ComponentContext context = builder.build();
 
       //Escrevendo a IOR do IComponent no arquivo.

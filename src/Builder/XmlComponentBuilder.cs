@@ -18,7 +18,7 @@ namespace Scs.Core.Builder
   /// construido em XML.
   /// É necessário seguir o schema 'ComponentDescription.xsd'.
   /// </summary>
-  public class XMLComponentBuilder
+  public class XmlComponentBuilder
   {
     #region Constants
 
@@ -49,7 +49,7 @@ namespace Scs.Core.Builder
     /// <summary>
     /// O log.
     /// </summary>
-    private static ILog logger = LogManager.GetLogger(typeof(XMLComponentBuilder));
+    private static ILog logger = LogManager.GetLogger(typeof(XmlComponentBuilder));
 
     /// <summary>
     /// O Xml do componente.
@@ -70,7 +70,7 @@ namespace Scs.Core.Builder
     /// </exception>
     /// <exception cref="ScsException">Caso ocorra um erro na validação do Xml.
     /// </exception>
-    public XMLComponentBuilder(XmlTextReader componentInformation) {
+    public XmlComponentBuilder(XmlTextReader componentInformation) {
       MemoryStream memorySchema = new MemoryStream(Resources.ComponentModel);
       XmlTextReader xsdReader = new XmlTextReader(memorySchema);
 
