@@ -124,6 +124,12 @@
   <data name="Component10" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\models\component10.xml;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="Component11" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\models\component11.xml;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="Component12" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\models\component12.xml;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="Component2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\models\component2.xml;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>

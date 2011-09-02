@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using Ch.Elca.Iiop.Idl;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using scs.core;
 using Scs.Core;
@@ -167,6 +167,30 @@ namespace Test
     [ExpectedException(typeof(SCSException))]
     public void buildTest_ContextNoAssembly() {
       String componentModel = Resources.Component9;
+      TextReader file = new StringReader(componentModel);
+      XmlTextReader componentInformation = new XmlTextReader(file);
+      XmlComponentBuilder target = new XmlComponentBuilder(componentInformation);
+
+      ComponentContext actual = target.build();
+    }
+
+    [TestMethod]
+    public void buildTest_UpdateIComponent() {
+      String componentModel = Resources.Component11;
+      TextReader file = new StringReader(componentModel);
+      XmlTextReader componentInformation = new XmlTextReader(file);
+      XmlComponentBuilder target = new XmlComponentBuilder(componentInformation);
+
+      ComponentContext actual = target.build();
+      String facetInterface = Repository.GetRepositoryID(typeof(IMetaInterface));
+      MarshalByRefObject facet = actual.GetIComponent().getFacet(facetInterface);
+      Assert.IsNull(facet);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(SCSException))]
+    public void buildTest_UpdateIComponent_WrongInterface() {
+      String componentModel = Resources.Component12;
       TextReader file = new StringReader(componentModel);
       XmlTextReader componentInformation = new XmlTextReader(file);
       XmlComponentBuilder target = new XmlComponentBuilder(componentInformation);
