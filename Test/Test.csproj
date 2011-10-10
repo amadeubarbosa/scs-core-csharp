@@ -55,6 +55,8 @@
     <Compile Include="IComponentServantTest.cs" />
     <Compile Include="IMetaInterfaceServantTest.cs" />
     <Compile Include="IReceptaclesServantTest.cs" />
+    <Compile Include="Mock\MockIMetaInterfaceServant.cs" />
+    <Compile Include="Mock\MockIComponentServant.cs" />
     <Compile Include="Mock\MockComponentContext2.cs" />
     <Compile Include="Mock\MockComponentContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -90,6 +92,8 @@
     <Content Include="Models\Component8.xml" />
     <Content Include="Models\Component9.xml" />
     <Content Include="Models\Component10.xml" />
+    <Content Include="Models\Component11.xml" />
+    <Content Include="Models\Component12.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
