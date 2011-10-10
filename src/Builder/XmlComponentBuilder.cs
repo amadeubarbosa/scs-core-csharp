@@ -200,8 +200,19 @@ namespace Scs.Core.Builder
             "A faceta '{0}' não suporta a interface '{1}'", name, interfaceName);
           throw new SCSException(errorMsg);
         }
-
-        context.AddFacet(name, interfaceName, servant);
+        if (context.GetFacetByName(name) != null) {
+          logger.Info(String.Format("A faceta {0} foi atualizada.", name));
+          try {
+            context.UpdateFacet(name, servant);
+          }
+          catch (ArgumentException e) {
+            throw new SCSException(e.Message);
+          }
+        }
+        else {
+          logger.Debug(String.Format("Adicionando a faceta {0}", name));
+          context.AddFacet(name, interfaceName, servant);
+        }
       }
     }
 
@@ -219,6 +230,7 @@ namespace Scs.Core.Builder
         Boolean isMultiple =
             XmlConvert.ToBoolean(receptacleNode[RECEPTACLE_MULTIPLE].InnerText);
 
+        logger.Debug(String.Format("Adicionando o receptáculo {0}", name));
         context.AddReceptacle(name, interfaceName, isMultiple);
       }
     }
