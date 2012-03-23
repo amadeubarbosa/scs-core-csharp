@@ -1,0 +1,13 @@
+Para compilar o projeto é necessário:
+
+Adicionar o seguinte artefato em:
+
+|	Artefato	|	Destino	|	Encontrado		|
+|  ComponentDescription.xsd		|  raiz do projeto	| https://subversion.tecgraf.puc-rio.br/endgist/scs/core/schema|
+
+Para compilar as IDLs:
+No diretório idlCompiler do IIOP.NET, executar o comando:
+
+IDLToCLSCompiler.exe -snk ScsKey.snk -asmVersion <versao-do-scs> Scs.Core scs.idl auxiliar.idl
+
+Esse comando gerará o arquivo Scs.Core.dll. Mova esse arquivo para o diretório lib\generated.
