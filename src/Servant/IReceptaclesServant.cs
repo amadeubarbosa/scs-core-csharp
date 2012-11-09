@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using log4net;
 using scs.core;
@@ -68,7 +67,7 @@ namespace Scs.Core.Servant
     /// </exception>    
     public int connect(string receptacle, MarshalByRefObject obj) {
       IDictionary<string, Receptacle> receptacles =
-          this.context.GetReceptacles();
+          context.GetReceptacles();
       if (!receptacles.ContainsKey(receptacle))
         throw new InvalidName();
 
@@ -128,5 +127,9 @@ namespace Scs.Core.Servant
     }
 
     #endregion
+
+    public override object InitializeLifetimeService() {
+      return null;
+    }
   }
 }

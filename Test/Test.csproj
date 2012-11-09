@@ -34,6 +34,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -53,13 +54,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="IIOPChannel, Version=1.9.1.0, Culture=neutral, PublicKeyToken=737d7ebb1cf8d684, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="IIOPChannel">
       <HintPath>..\lib\IIOPChannel.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Scs.Core, Version=1.2.0.0, Culture=neutral, PublicKeyToken=dfc497b8b7d0eb85, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Scs.Core">
       <HintPath>..\lib\generated\Scs.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -88,12 +87,6 @@
     </Compile>
     <Compile Include="ReceptacleTest.cs" />
     <Compile Include="XMLComponentBuilderTest.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Scs.csproj">
-      <Project>{04BF15CF-AB3B-4712-BDBE-575A1A7AA35C}</Project>
-      <Name>Scs</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\ScsKey.snk">
@@ -143,6 +136,12 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\scs.csproj">
+      <Project>{04BF15CF-AB3B-4712-BDBE-575A1A7AA35C}</Project>
+      <Name>scs</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
