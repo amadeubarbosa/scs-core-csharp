@@ -180,6 +180,18 @@ module mymodule{
 };
 \end{labeledcode}
 
+Um detalhe importante é que, devido à forma como objetos do tipo "MarshalByRefObject" podem definir sua política de "tempo de vida", os \emph{servants} podem ser coletados pelo coletor de lixo mesmo ainda estando ativos e aguardando por chamadas. Isso pode ocorrer, por exemplo, caso não haja chamadas por um tempo. Para evitar esse tipo de comportamento e manter os \emph{servants} ativos indefinidamente, é necessário sobrescrever o método "InitializeLifetimeService" que indica quando o objeto deve ser coletado, como descrito no Código~\ref{lst:lifetime}. Isso deve ser feito em cada \emph{servant} implementado.
+
+\begin{labeledcode}[CSharp]{lifetime}{Implementação da faceta Hello sobrescrevendo o método InitializeLifetimeService}
+  public class HelloImpl : MarshalByRefObject, Hello {
+    ...
+
+    public  override object InitializeLifetimeService() {
+      return null;
+    }
+  }
+\end{labeledcode}
+
 Para adicionar a faceta implementada no Código~\ref{lst:faceta}, no componente,
  deve-se chamar o método \emph{AddFacet}, que possui como parâmetros o nome, a
  interface e um objeto que representa a implementação da faceta. O uso desse
