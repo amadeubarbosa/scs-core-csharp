@@ -43,7 +43,7 @@ namespace Scs.Core.Servant
     /// </summary>
     /// <returns>O conjunto de descritores de facetas.</returns>
     public FacetDescription[] getFacets() {
-      IDictionary<String, Facet> facets = this.context.GetFacets();
+      IDictionary<String, Facet> facets = context.GetFacets();
 
       return CreateFacetDescriptionVector(facets);
     }
@@ -58,7 +58,7 @@ namespace Scs.Core.Servant
     /// Caso um nome seja inválido.
     /// </exception>
     public FacetDescription[] getFacetsByName(string[] names) {
-      IDictionary<String, Facet> facets = this.context.GetFacets();
+      IDictionary<String, Facet> facets = context.GetFacets();
 
       var filteredFacets =
           from facet in facets
@@ -76,7 +76,7 @@ namespace Scs.Core.Servant
     /// <returns>O conjunto de descritores de receptáculos.</returns>
     public ReceptacleDescription[] getReceptacles() {
       IDictionary<String, Receptacle> receptacles =
-          this.context.GetReceptacles();
+          context.GetReceptacles();
 
       return CreateReceptacleDescriptionVector(receptacles);
     }
@@ -89,7 +89,7 @@ namespace Scs.Core.Servant
     /// <returns>O conjunto de descritores de receptáculos.</returns>
     public ReceptacleDescription[] getReceptaclesByName(string[] names) {
       IDictionary<String, Receptacle> receptacles =
-          this.context.GetReceptacles();
+          context.GetReceptacles();
 
       var filteredReceptacles =
           from receptacle in receptacles
@@ -142,5 +142,9 @@ namespace Scs.Core.Servant
     }
 
     #endregion
+
+    public override object InitializeLifetimeService() {
+      return null;
+    }
   }
 }

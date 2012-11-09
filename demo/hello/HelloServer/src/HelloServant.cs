@@ -27,5 +27,9 @@ namespace Server
     }
 
     #endregion
+
+    public override object InitializeLifetimeService() {
+      return null;
+    }
   }
 }

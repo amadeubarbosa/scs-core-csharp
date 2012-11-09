@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using scs.core;
 
@@ -53,7 +52,7 @@ namespace Scs.Core.Servant
     /// </param>
     /// <returns>Referência para a faceta do componente.</returns>
     public MarshalByRefObject getFacet(string facet_interface) {
-      IDictionary<String, Facet> facets = this.context.GetFacets();
+      IDictionary<String, Facet> facets = context.GetFacets();
       foreach (Facet facet in facets.Values) {
         if (facet.InterfaceName == facet_interface)
           return facet.Reference;
@@ -85,5 +84,9 @@ namespace Scs.Core.Servant
     public void startup() { }
 
     #endregion
+
+    public override object InitializeLifetimeService() {
+      return null;
+    }
   }
 }
