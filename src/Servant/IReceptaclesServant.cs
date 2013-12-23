@@ -69,7 +69,7 @@ namespace Scs.Core.Servant
       IDictionary<string, Receptacle> receptacles =
           context.GetReceptacles();
       if (!receptacles.ContainsKey(receptacle))
-        throw new InvalidName();
+        throw new InvalidName { name = receptacle };
 
       Receptacle rec = receptacles[receptacle];
       if ((!rec.IsMultiple) &&
@@ -120,7 +120,7 @@ namespace Scs.Core.Servant
     public ConnectionDescription[] getConnections(string receptacle) {
       IDictionary<string, Receptacle> receptacles = context.GetReceptacles();
       if (!receptacles.ContainsKey(receptacle))
-        throw new InvalidName();
+        throw new InvalidName { name = receptacle };
 
       Receptacle rec = receptacles[receptacle];
       return rec.GetConnections().ToArray();
