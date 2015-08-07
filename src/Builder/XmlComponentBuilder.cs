@@ -68,7 +68,7 @@ namespace Scs.Core.Builder
     /// </param>
     /// <exception cref="ArgumentNullException">Caso o argumento seja nulo.
     /// </exception>
-    /// <exception cref="ScsException">Caso ocorra um erro na validação do Xml.
+    /// <exception cref="SCSException">Caso ocorra um erro na validação do Xml.
     /// </exception>
     public XmlComponentBuilder(XmlTextReader componentInformation) {
       MemoryStream memorySchema = new MemoryStream(Resources.ComponentModel);

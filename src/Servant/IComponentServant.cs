@@ -85,6 +85,10 @@ namespace Scs.Core.Servant
 
     #endregion
 
+    /// <summary>
+    /// Sempre retorna null para assinalar que este objeto não tem um ciclo de vida definido e portando não deve ser destruído.
+    /// </summary>
+    /// <returns>Null.</returns>
     public override object InitializeLifetimeService() {
       return null;
     }
