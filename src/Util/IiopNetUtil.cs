@@ -51,7 +51,7 @@ namespace Scs.Core.Util
     /// <exception cref="System.Security.SecurityException"></exception>
     /// <exception cref="System.Runtime.Remoting.RemotingException"></exception>
     public static ObjRef ActivateFacet(MarshalByRefObject facetObj) {
-      return RemotingServices.Marshal(facetObj);
+      return OrbServices.ActivateObject(facetObj);
     }
 
     /// <summary>
@@ -61,7 +61,7 @@ namespace Scs.Core.Util
     /// <param name="id">O nome identificador da faceta.</param>
     /// <returns>Referência para o objeto remoto.</returns>
     public static ObjRef ActivateFacet(MarshalByRefObject facetObj, String id) {
-      return RemotingServices.Marshal(facetObj, id);
+      return OrbServices.ActivateObject(facetObj, id);
     }
 
     /// <summary>
@@ -70,7 +70,7 @@ namespace Scs.Core.Util
     /// <param name="facetObj">Uma instância do servant.</param>
     /// <exception cref="System.Security.SecurityException"></exception>
     public static void DeactivateFacet(MarshalByRefObject facetObj) {
-      RemotingServices.Disconnect(facetObj);
+      OrbServices.DeactivateObject(facetObj);
     }
   }
 }
