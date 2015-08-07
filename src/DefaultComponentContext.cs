@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Remoting;
 using log4net;
 using scs.core;
 using Scs.Core.Exception;
