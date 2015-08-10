@@ -69,7 +69,7 @@
         (PUC-Rio)\\
         scs-users@tecgraf.puc-rio.br}
 
-\date{2014-01-23}
+\date{2015-08-10}
 \maketitle
 
 
@@ -83,8 +83,8 @@ Este documento é um tutorial básico sobre a criação de componentes no modelo SCS
  serviços específicos desenvolvidos para o auxílio ao uso do modelo, como a
  infra-estrutura de execução. Essas informações também podem ser obtidas em
  outros documentos.
-A implementação do SCS C\# versão 1.2.1.2 utiliza o .Net
- Framework 4.0\cite{NETFRAMEWORK} e IIOP.NET 1.9.3\cite{IIOPNET}. Este documento
+A implementação do SCS C\# versão 1.2.1.3 utiliza o .Net
+ Framework 4.0\cite{NETFRAMEWORK} e IIOP.NET 1.9.4.0\cite{IIOPNET}. Este documento
  assume que o leitor é familiarizado a conceitos de desenvolvimento de
  \emph{software} baseado em componentes e à terminologia CORBA\cite{CORBA}.
 
@@ -96,14 +96,13 @@ Para a criação e execução do código de um componente, é necessária a
 
 \begin{labeledcode}[CSharp]{init}{Criação do ORB}
   int port = ...
-  IiopChannel chan = new IiopChannel(port);
-  ChannelServices.RegisterChannel(chan, false);
+  IiopChannel chan = OrbServices.CreateAndRegisterIiopChannel(port);
 \end{labeledcode}
 
-A classe IiopChannel possui dois construtores. Para criar um canal apenas
- cliente é utilizado o construtor sem parâmetros. Já para criar um canal que
- aceita receber requisições, é necessário utilizar o construtor que possui a
- porta do canal como parâmetro.
+A classe OrbServices possui três métodos estáticos para a criação e registro de canais de comunicação IIOP. Para criar um canal apenas
+ cliente é utilizado o método com assinatura sem parâmetros. Já para criar um canal que
+ aceite receber requisições, é necessário utilizar o método que possui a
+ porta do canal como parâmetro, ou o método que recebe um mapa de propriedades, definindo a propriedade referente à porta e/ou outras especificadas pela documentação do IIOP.NET.
 
 \section{Passos Necessários à Criação de um Componente}\label{criacao}
 
@@ -330,7 +329,7 @@ O SCS fornece em seu pacote de distribuição um arquivo chamado
   <id>
     <name>Hello</name>
     <version>1.0.0</version>
-    <platformSpec>.Net FrameWork 3.5</platformSpec>
+    <platformSpec>.Net FrameWork 4.0</platformSpec>
   </id>
   <facets>
     <facet>
@@ -379,8 +378,7 @@ O Código~\ref{lst:hellomain} utiliza o \emph{XMLComponentBuilder} para realizar
 
 \begin{labeledcode}[Csharp]{hellomain}{Criação do Componente Hello}
 static void Main(string[] args) {
-  IiopChannel chan = new IiopChannel(0);
-  ChannelServices.RegisterChannel(chan, false);
+  OrbServices.CreateAndRegisterIiopChannel(0);
 
   String componentModel = Resources.ComponentDesc;
   TextReader file = new StringReader(componentModel);
@@ -411,8 +409,7 @@ Por fim, temos o código "cliente", que acessa o componente. Note que esse
 
 \begin{labeledcode}[CSharp]{helloclient}{Utilização do Componente Hello}
 static void Main(string[] args) {
-  IiopChannel chan = new IiopChannel();
-  ChannelServices.RegisterChannel(chan, false);
+  OrbServices.CreateAndRegisterIiopChannel();
 
   String helloIorPath = Resources.IorFilename;
   StreamReader stream = new StreamReader(helloIorPath);

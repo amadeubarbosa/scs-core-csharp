@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.Remoting.Channels;
-using Ch.Elca.Iiop;
 using Ch.Elca.Iiop.Idl;
 using omg.org.CORBA;
 using scs.core;
@@ -10,16 +8,15 @@ using Scs.Core;
 
 namespace Server
 {
-  class Program
+  static class Program
   {
-    static void Main(string[] args) {
+    static void Main() {
       log4net.Config.XmlConfigurator.Configure();
 
       Console.WriteLine("Pressione 'enter' quando o componente Ping estiver no ar.");
       Console.ReadLine();
 
-      IiopChannel chan = new IiopChannel(0);
-      ChannelServices.RegisterChannel(chan, false);
+      OrbServices.CreateAndRegisterIiopChannel(0);
 
       ComponentId pongComponentId = new ComponentId("PingPong", 1, 0, 0, "");
       ComponentContext pongContext = new DefaultComponentContext(pongComponentId);
