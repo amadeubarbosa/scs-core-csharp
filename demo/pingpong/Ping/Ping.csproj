@@ -63,13 +63,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\Scs.dll</HintPath>
     </Reference>
-    <Reference Include="Scs.Core, Version=1.2.0.0, Culture=neutral, PublicKeyToken=dfc497b8b7d0eb85, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\generated\Scs.Core.dll</HintPath>
+    <Reference Include="Scs.Core">
+      <HintPath>..\..\..\lib\Scs.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Scs.Demo.PingPong, Version=1.2.0.0, Culture=neutral, PublicKeyToken=dfc497b8b7d0eb85, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\idl\generated\Scs.Demo.PingPong.dll</HintPath>
+    <Reference Include="Scs.Demo.PingPong">
+      <HintPath>..\..\..\lib\Scs.Demo.PingPong.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -125,6 +123,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>$(SolutionDir)..\..\lib\IDLToCLSCompiler.exe -snk $(SolutionDir)..\..\ScsKey.snk -asmVersion 1.0.0 -o $(SolutionDir)..\..\lib Scs.Demo.PingPong $(SolutionDir)idl\pingPong.idl</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

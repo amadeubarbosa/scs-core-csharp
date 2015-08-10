@@ -59,13 +59,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\Scs.dll</HintPath>
     </Reference>
-    <Reference Include="Scs.Core, Version=1.2.0.0, Culture=neutral, PublicKeyToken=dfc497b8b7d0eb85, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\generated\Scs.Core.dll</HintPath>
+    <Reference Include="Scs.Core">
+      <HintPath>..\..\..\lib\Scs.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Scs.Demo.HelloWorld, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\idl\generated\Scs.Demo.HelloWorld.dll</HintPath>
+    <Reference Include="Scs.Demo.HelloWorld">
+      <HintPath>..\..\..\lib\Scs.Demo.HelloWorld.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -97,9 +95,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
@@ -115,6 +110,9 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

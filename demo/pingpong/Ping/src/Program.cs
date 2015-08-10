@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.Remoting.Channels;
 using System.Xml;
-using Ch.Elca.Iiop;
 using omg.org.CORBA;
 using Ping.Properties;
 using scs.core;
@@ -11,13 +9,12 @@ using Scs.Core.Builder;
 
 namespace Server
 {
-  class Program
+  static class Program
   {
-    static void Main(string[] args) {
+    static void Main() {
       log4net.Config.XmlConfigurator.Configure();
 
-      IiopChannel chan = new IiopChannel(0);
-      ChannelServices.RegisterChannel(chan, false);
+      OrbServices.CreateAndRegisterIiopChannel(0);
 
       String componentModel = Resources.ComponentDesc;
       TextReader file = new StringReader(componentModel);
@@ -30,7 +27,7 @@ namespace Server
       OrbServices orb = OrbServices.GetSingleton();
       String ior = orb.object_to_string(pingComponent);
 
-      String iorPath = Ping.Properties.Resources.IorFilename;
+      String iorPath = Resources.IorFilename;
       StreamWriter stream = new StreamWriter(iorPath);
       try {
         stream.Write(ior);
